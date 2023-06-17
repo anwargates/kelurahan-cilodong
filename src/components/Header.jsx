@@ -14,7 +14,7 @@ import { auth } from "../config/firebase";
 export const Header = () => {
   // const [nav, setNav] = useState(false)
   const [nav, { toggle }] = useDisclosure(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { isLoggedIn, setLoggedIn, isAdmin } = useStore();
   // const pending = useStore((state) => state.authRefreshing)
   // const isLoggedIn = useStore((state) => state.isLoggedIn)
@@ -47,12 +47,12 @@ export const Header = () => {
   const handleLogout = () => {
     signOut(auth)
       .then(setLoggedIn(false))
-      .then(() => navigate('/'))
-  }
+      .then(() => navigate("/"));
+  };
 
   return (
     <header className="absolute top-0 z-50 w-full">
-      <nav className="bg-secondary">
+      <nav className="shadow-lg">
         <div className="default-container flex h-[10vh] items-center justify-between gap-8 p-6 sm:px-16 sm:py-6">
           {/* LOGO */}
           <Link to="/">
@@ -69,7 +69,7 @@ export const Header = () => {
                   </Link>
                 </li>
                 <li className="header-link-button">
-                  <Link className="hover:text-gray-200" to="/photo-category">
+                  <Link className="hover:text-gray-200" to="/pengajuan">
                     Pengajuan Surat
                   </Link>
                 </li>
@@ -122,7 +122,12 @@ export const Header = () => {
                     <Menu.Item rightSection={<IoSettingsOutline />}>
                       Settings
                     </Menu.Item>
-                    <Menu.Item onClick={handleLogout} rightSection={<FiLogOut />}>Logout</Menu.Item>
+                    <Menu.Item
+                      onClick={handleLogout}
+                      rightSection={<FiLogOut />}
+                    >
+                      Logout
+                    </Menu.Item>
                   </Menu.Dropdown>
                 </Menu>
               </div>

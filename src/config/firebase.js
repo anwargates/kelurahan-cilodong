@@ -7,7 +7,7 @@ import {
   FacebookAuthProvider,
 } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-// import { getStorage } from "firebase/storage";
+import { getStorage } from "firebase/storage";
 // import { getDatabase } from "firebase/database";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -20,7 +20,7 @@ const firebaseConfig = {
   projectId: "kelurahan-cilodong",
   storageBucket: "kelurahan-cilodong.appspot.com",
   messagingSenderId: "565399024044",
-  appId: "1:565399024044:web:c1e18db3f96fcf979e8a09"
+  appId: "1:565399024044:web:c1e18db3f96fcf979e8a09",
 };
 
 // Initialize Firebase
@@ -28,5 +28,5 @@ const app = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(app)
 export const auth = getAuth(app);
 export const db = getFirestore(app);
-// export const storage = getStorage(app);
+export const storage = getStorage(app);
 // export const database = getDatabase(app);

@@ -4,6 +4,10 @@ import LoginArt from "../assets/login-art.png";
 import { Input } from "@mantine/core";
 import { useForm } from "react-hook-form";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { useStore } from "../global/store";
+import { auth } from "../config/firebase";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -12,26 +16,28 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const {setActionLoading,setLoggedIn}=useStore()
+  const navigate = useNavigate()
 
   const onSubmit = (data) => {
-    // setPending(true);
+    setActionLoading(true);
     // console.log(data);
-    // signInWithEmailAndPassword(auth, data.email, data.password)
-    //   .then((userCredential) => {
-    //     // Signed in
-    //     const user = userCredential.user;
-    //     console.log(user);
-    //     // setLoggedIn(true);
-    //     // setPending(false);
-    //     navigate("/");
-    //     // ...
-    //   })
-    //   .catch((e) => {
-    //     console.log(e);
-    //     // setPending(false);
-    //     setErrorMessage(e.message);
-    //     // toggleNotify.open();
-    //   });
+    signInWithEmailAndPassword(auth, data.email, data.password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        console.log(user);
+        setLoggedIn(true);
+        setActionLoading(false);
+        navigate("/");
+        // ...
+      })
+      .catch((e) => {
+        console.log(e);
+        setActionLoading(false);
+        // setErrorMessage(e.message);
+        // toggleNotify.open();
+      });
   };
 
   const togglePasswordVisibility = () => {
