@@ -7,7 +7,7 @@ import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useStore } from "../global/store";
 import { auth } from "../config/firebase";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -16,8 +16,8 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const {setActionLoading,setLoggedIn}=useStore()
-  const navigate = useNavigate()
+  const { setActionLoading, setLoggedIn } = useStore();
+  const navigate = useNavigate();
 
   const onSubmit = (data) => {
     setActionLoading(true);
@@ -96,7 +96,9 @@ const Login = () => {
             </div>
             <input className="btn-submit" type="submit" value="Login" />
           </form>
-          <span className="text-center">Belum mempunyai akun ? Daftar</span>
+          <span className="text-center">
+            Belum mempunyai akun ? <Link to={"/register"}>Daftar</Link>
+          </span>
         </div>
       </div>
     </div>

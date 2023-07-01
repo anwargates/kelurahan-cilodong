@@ -1,6 +1,8 @@
-import { create } from 'zustand'
+import { create } from "zustand";
 
 export const useStore = create((set) => ({
+  userData: {},
+  setUserData: (user) => set(() => ({ userData: user })),
   isLoggedIn: false,
   setLoggedIn: (login) => set(() => ({ isLoggedIn: login })),
   isAdmin: false,
@@ -9,15 +11,15 @@ export const useStore = create((set) => ({
   setAuthRefreshing: (refresh) => set(() => ({ authRefreshing: refresh })),
   actionLoading: false,
   setActionLoading: (loading) => set(() => ({ actionLoading: loading })),
-}))
+}));
 
 export const reauthStore = create((set) => ({
   reauthFormState: {
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   },
   setReauthFormState: (form) => set(() => ({ reauthFormState: form })),
-}))
+}));
 
 export const usePaymentStore = create((set) => ({
   // paymentFormState: {
@@ -27,11 +29,11 @@ export const usePaymentStore = create((set) => ({
   //   bukti: '',
   // },
   // setPaymentFormState: (form) => set(() => ({ paymentFormState: form })),
-  lokasi: '',
+  lokasi: "",
   tanggal: [null, null],
-  metode: '',
-  bukti: '',
-}))
+  metode: "",
+  bukti: "",
+}));
 
 // export const useOverlayPending = create((set)=>{
 //   overlayPending

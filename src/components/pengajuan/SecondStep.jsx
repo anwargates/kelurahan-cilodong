@@ -11,7 +11,7 @@ import React, { useEffect, useState } from "react";
 import Ktp from "./syarat/Ktp";
 import { useStore } from "../../global/store";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { db, storage } from "../../config/firebase";
+import { auth, db, storage } from "../../config/firebase";
 import { v4 } from "uuid";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 
@@ -28,7 +28,7 @@ const dropdownData = (jenis) => {
         { label: "Kartu Keluarga (KK) - Baru", value: "KK1" },
         { label: "Kartu Keluarga (KK) - Pindah", value: "KK2" },
       ];
-    case "KTP":
+    case "NA":
       return [{ label: "Nikah (N.A)", value: "NA" }];
     default:
       return;
@@ -83,6 +83,7 @@ const SecondStep = ({ handler, form }) => {
       suratPengantar: urlSuratPengantar,
       scanKK: urlScanKK,
       docTambahan: urlDocTambahan,
+      userID: auth.currentUser.uid,
       timestamp: serverTimestamp(),
     })
       .then((res) => {

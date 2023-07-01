@@ -1,13 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form';
-import { BsEyeSlash, BsEye } from 'react-icons/bs';
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { BsEyeSlash, BsEye } from "react-icons/bs";
 import Logo from "../assets/logo-cilodong.png";
 import LoginArt from "../assets/login-art.png";
-import { useStore } from '../global/store';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
-import { auth, db } from '../config/firebase';
-import { doc, setDoc } from 'firebase/firestore';
+import { useStore } from "../global/store";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
+import { Link, useNavigate } from "react-router-dom";
+import { auth, db } from "../config/firebase";
+import { doc, setDoc } from "firebase/firestore";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -18,22 +22,21 @@ const Register = () => {
     getValues,
     formState: { errors },
   } = useForm();
-  const {setActionLoading, setLoggedIn}=useStore()
-  const navigate = useNavigate()
+  const { setActionLoading, setLoggedIn } = useStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log(getValues());
     console.log(errors);
-  }, [getValues()])
-  
+  }, [getValues()]);
 
   const onSubmit = (data) => {
     setActionLoading(true);
     console.log(data);
     createUserWithEmailAndPassword(auth, data.email, data.password)
       .then((userCredential) => {
-        handleCreateDoc(userCredential.user.uid, data)
-        console.log(userCredential)
+        handleCreateDoc(userCredential.user.uid, data);
+        console.log(userCredential);
         // updateProfile(auth.currentUser, {
         //   displayName: data.name,
         // }).catch((e) => {
@@ -42,35 +45,35 @@ const Register = () => {
         //   // setErrorMessage(e.message)
         //   // toggleNotify.open()
         // })
-          setActionLoading(false)
+        setActionLoading(false);
       })
       .catch((e) => {
-        console.log(e)
-        setActionLoading(false)
+        console.log(e);
+        setActionLoading(false);
         // setErrorMessage(e.message)
         // toggleNotify.open()
-      })
+      });
   };
 
- const handleCreateDoc = async (id, data) => {
-    await setDoc(doc(db, 'users', id), {
+  const handleCreateDoc = async (id, data) => {
+    await setDoc(doc(db, "users", id), {
       alamat: data.alamat,
       hp: data.hp,
       nama: data.nama,
       nik: data.nik,
     })
       .then((res) => {
-        console.log('create doc success', res)
-        setLoggedIn(true)
-        setActionLoading(false)
-        navigate('/')
+        console.log("create doc success", res);
+        setLoggedIn(true);
+        setActionLoading(false);
+        navigate("/");
       })
       .catch((e) => {
-        setActionLoading(false)
+        setActionLoading(false);
         // setErrorMessage(e.message)
         // toggleNotify.open()
-      })
-  }
+      });
+  };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -109,43 +112,46 @@ const Register = () => {
                   })}
                 />
               </div>
-              <div className='flex gap-7'>
-                  <div className="input-field flex">
-                    <input
-                      className="inner-input"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Masukkan Password"
-                      {...register("password", { required: true, minLength:6 })}
-                    />
-                    <div className="flex items-center justify-center px-4">
-                      {showPassword ? (
-                        <BsEyeSlash onClick={togglePasswordVisibility} />
-                      ) : (
-                        <BsEye onClick={togglePasswordVisibility} />
-                      )}
-                    </div>
+              <div className="flex gap-7">
+                <div className="input-field flex">
+                  <input
+                    className="inner-input"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Masukkan Password"
+                    {...register("password", { required: true, minLength: 6 })}
+                  />
+                  <div className="flex items-center justify-center px-4">
+                    {showPassword ? (
+                      <BsEyeSlash onClick={togglePasswordVisibility} />
+                    ) : (
+                      <BsEye onClick={togglePasswordVisibility} />
+                    )}
                   </div>
-                  <div className="input-field flex">
-                <input
-                  className="inner-input"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Konfirmasi Password"
-                  {...register('confirmPassword', {
-            required: true,
-            minLength:6,
-            validate: (value) => value === watch('password') || 'Passwords do not match',
-          })}
-                />
-                <div className="flex items-center justify-center px-4">
-                  {showPassword ? (
-                    <BsEyeSlash onClick={togglePasswordVisibility} />
-                  ) : (
-                    <BsEye onClick={togglePasswordVisibility} />
-                  )}
+                </div>
+                <div className="input-field flex">
+                  <input
+                    className="inner-input"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Konfirmasi Password"
+                    {...register("confirmPassword", {
+                      required: true,
+                      minLength: 6,
+                      validate: (value) =>
+                        value === watch("password") || "Passwords do not match",
+                    })}
+                  />
+                  <div className="flex items-center justify-center px-4">
+                    {showPassword ? (
+                      <BsEyeSlash onClick={togglePasswordVisibility} />
+                    ) : (
+                      <BsEye onClick={togglePasswordVisibility} />
+                    )}
+                  </div>
                 </div>
               </div>
-              </div>
-              {errors.root?.confirmPassword && <span>{errors.root?.confirmPassword?.message}</span>}
+              {errors.root?.confirmPassword && (
+                <span>{errors.root?.confirmPassword?.message}</span>
+              )}
               <div className="input-field flex">
                 <input
                   className="inner-input"
@@ -188,7 +194,9 @@ const Register = () => {
               </div>
               <input className="btn-submit" type="submit" value="Daftar" />
             </form>
-            <span className="text-center">Sudah mempunyai akun ? Masuk</span>
+            <span className="text-center">
+              Sudah mempunyai akun ? <Link to={"/login"}>Masuk</Link>
+            </span>
           </div>
         </div>
       </div>
@@ -196,4 +204,4 @@ const Register = () => {
   );
 };
 
-export default Register
+export default Register;

@@ -74,7 +74,7 @@ export const Header = () => {
                   </Link>
                 </li>
                 <li className="header-link-button">
-                  <Link className="hover:text-gray-200" to="/gallery">
+                  <Link className="hover:text-gray-200" to="/lacak">
                     Lacak Surat
                   </Link>
                 </li>

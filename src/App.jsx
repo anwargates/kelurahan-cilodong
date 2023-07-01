@@ -10,6 +10,12 @@ import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "./config/firebase";
 import PengajuanSurat from "./pages/PengajuanSurat";
+import LacakSurat from "./pages/LacakSurat";
+import AdminTemplate from "./components/templates/AdminTemplate";
+import Dashboard from "./pages/admin/Dashboard";
+import AdminPengajuanSurat from "./pages/admin/AdminPengajuanSurat";
+import AdminSuratKeluar from "./pages/admin/AdminSuratKeluar";
+import AdminArsipPenduduk from "./pages/admin/AdminArsipPenduduk";
 
 function App() {
   const {
@@ -19,6 +25,7 @@ function App() {
     actionLoading,
     isLoggedIn,
     setLoggedIn,
+    setUserData,
   } = useStore();
 
   useEffect(() => {
@@ -38,6 +45,7 @@ function App() {
               // TODO: enable this later
               // setAdmin(docSnap.data().isAdmin)
               // console.log(isAdmin)
+              setUserData(docSnap.data());
             }
             setLoggedIn(true);
             setAuthRefreshing(false);
@@ -80,6 +88,7 @@ function App() {
           <Route index element={<HomePage />} />
           <Route element={<UserCheck />}>
             <Route path="/pengajuan" element={<PengajuanSurat />} />
+            <Route path="/lacak" element={<LacakSurat />} />
           </Route>
         </Route>
         <Route element={<LoginCheck />}>
@@ -102,6 +111,15 @@ function App() {
           </Route> */}
         </Route>
         /* CHECK IF USER ISADMIN
+        <Route path="/admin" element={<AdminTemplate />}>
+          <Route index element={<Dashboard />} />
+          <Route path="/admin/pengajuan" element={<AdminPengajuanSurat />} />
+          <Route path="/admin/surat-keluar" element={<AdminSuratKeluar />} />
+          <Route
+            path="/admin/arsip-penduduk"
+            element={<AdminArsipPenduduk />}
+          />
+        </Route>
         {/* <Route element={<AdminCheck />}>
           <Route path="/admin" element={<AdminTemplate />}>
             <Route index element={<DashPayments />} />
