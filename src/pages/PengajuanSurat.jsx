@@ -39,6 +39,8 @@ const PengajuanSurat = () => {
       suratPengantar: "",
       scanKK: "",
       docTambahan: "",
+      idStatus: 1,
+      statusPengajuan: "Pending",
     },
     // validate: {
     //   lokasi: (value) => (!value ? "Mohon Diisi" : null),
@@ -77,7 +79,7 @@ const PengajuanSurat = () => {
   //   }
 
   return (
-    <div className="mt-[10vh] pt-16">
+    <div className="pt-12">
       <h1 className="text-center text-4xl font-bold">
         <span className="text-[#2B6777]">Pengajuan</span> Surat
       </h1>
@@ -88,6 +90,7 @@ const PengajuanSurat = () => {
           breakpoint="sm"
           color="#2B6777"
           size="xl"
+          allowNextStepsSelect={false}
         >
           <Stepper.Step label="Pilih Jenis Surat">
             <FirstStep handler={[nextStep, prevStep]} form={form} />

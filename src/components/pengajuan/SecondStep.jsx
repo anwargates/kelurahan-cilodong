@@ -13,7 +13,13 @@ import { useStore } from "../../global/store";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { auth, db, storage } from "../../config/firebase";
 import { v4 } from "uuid";
-import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
 
 const dropdownData = (jenis) => {
   switch (jenis) {
@@ -59,6 +65,23 @@ const SecondStep = ({ handler, form }) => {
     return url;
   };
 
+  const handleNotify = () => {
+    addDoc(collection(db, "notifications"), {
+      idSurat: form.values.id,
+      receiver: "admin",
+      sender: auth.currentUser.uid,
+      message: `Pengajuan surat baru dari ${auth.currentUser.displayName}`,
+      title: "Pengajuan Surat Baru",
+      read: false,
+    })
+      .then((res) => {
+        console.log("create notification success", res);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
   const handleSubmit = async () => {
     let urlSuratPengantar = "",
       urlScanKK = "",
@@ -77,9 +100,9 @@ const SecondStep = ({ handler, form }) => {
 
     console.log("urlSuratPengantar", urlSuratPengantar);
 
-    const { id, ...rest } = form.values;
-    setDoc(doc(db, "pengajuan", id), {
-      ...rest,
+    // const { id, ...rest } = form.values;
+    setDoc(doc(db, "pengajuan", form.values.id), {
+      ...form.values,
       suratPengantar: urlSuratPengantar,
       scanKK: urlScanKK,
       docTambahan: urlDocTambahan,
@@ -88,7 +111,7 @@ const SecondStep = ({ handler, form }) => {
     })
       .then((res) => {
         console.log("create doc success", res);
-        // handleNotify();
+        handleNotify();
         setPending(false);
         nextStep();
       })
@@ -127,6 +150,16 @@ const SecondStep = ({ handler, form }) => {
             className="flex-[3] rounded-md px-2 "
             type="text"
             {...form.getInputProps("nama")}
+          />
+        </div>
+        <div className="flex gap-2">
+          <label className="flex-1 text-2xl font-bold text-primary">
+            NIK <span className="text-red-500">*</span>
+          </label>
+          <input
+            className="flex-[3] rounded-md px-2 "
+            type="text"
+            {...form.getInputProps("nik")}
           />
         </div>
         <div className="flex gap-2">

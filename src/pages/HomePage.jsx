@@ -3,9 +3,9 @@ import Hero from "../assets/hero.jpeg";
 
 export const HomePage = () => {
   return (
-    <div className="pt-[10vh]">
+    <div className="">
       <section className="bg-primary">
-        <div className="default-container grid h-[90vh] grid-flow-col gap-28 px-48 py-44">
+        <div className="default-container grid h-[90vh] grid-flow-col gap-28 px-4 py-44 xl:px-48">
           <div className="flex items-center justify-center">
             <img className="rounded-full" src={Hero} alt="" />
           </div>

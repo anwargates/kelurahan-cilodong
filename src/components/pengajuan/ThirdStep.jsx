@@ -5,12 +5,13 @@ const ThirdStep = ({ handler, form }) => {
   return (
     <div className="mt-8 flex flex-col items-center justify-center gap-10">
       <h1 className="text-2xl font-bold">
-        Selamat : Anda Berhasil Mengajukan Surat. Berikut ID Surat Anda{" "}
+        Selamat : Anda Berhasil Mengajukan Surat. Berikut ID Surat Anda
       </h1>
       <h2 className="text-4xl font-bold">{form.values.id}</h2>
       <span>
         * setelah anda menekan tombol selesai, anda akan dialihkan ke beranda
-        portal website cilodong
+        portal website cilodong. Dimohon untuk melakukan pengecekan secara
+        berkala di web ini.
       </span>
       <Link
         to="/"

@@ -24,6 +24,7 @@ import { auth, db } from "../../config/firebase";
 import { usePagination } from "@mantine/hooks";
 import { useStore } from "../../global/store";
 import { BiEdit, BiTrash } from "react-icons/bi";
+import { Space, Table } from "antd";
 
 const items = [
   { title: "Home", href: "/admin" },
@@ -39,7 +40,9 @@ const AdminArsipPenduduk = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [selectedData, setSelectedData] = useState({});
-  const { setActionLoading } = useStore();
+  // const { actionLoading, setActionLoading } = useStore();
+  const [actionLoading, setActionLoading] = useState(false);
+
   // const [currentPage, setCurrentPage] = useState(1)
 
   const userId = auth.currentUser.uid;
@@ -62,6 +65,44 @@ const AdminArsipPenduduk = () => {
     pagination.setPage(page);
   };
 
+  const columns = [
+    {
+      title: "Nama",
+      dataIndex: "nama",
+      key: "nama",
+    },
+    {
+      title: "NIK",
+      dataIndex: "nik",
+      key: "nik",
+    },
+    {
+      title: "No HP",
+      dataIndex: "hp",
+      key: "hp",
+    },
+    {
+      title: "Actions",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <button
+            onClick={() => handleModal(record)}
+            className="mx-1 rounded-full bg-green-800 p-2 text-white"
+          >
+            <BiEdit />
+          </button>
+          <button
+            onClick={() => handleModal(record)}
+            className="mx-1 rounded-full bg-red-800 p-2 text-white"
+          >
+            <BiTrash />
+          </button>
+        </Space>
+      ),
+    },
+  ];
+
   const fetchData = async () => {
     setActionLoading(true);
     const snapshot = await getCountFromServer(pengajuanRef);
@@ -82,8 +123,9 @@ const AdminArsipPenduduk = () => {
       }
 
       const snapshot = await getDocs(newQuery);
-      const resultData = snapshot.docs.map((doc) => ({
+      const resultData = snapshot.docs.map((doc, index) => ({
         uid: doc.id,
+        number: (pagination.active - 1) * itemsPerPage + index + 1,
         ...doc.data(),
       }));
       setPengajuanData(resultData);
@@ -112,7 +154,7 @@ const AdminArsipPenduduk = () => {
       <tr key={element.uid}>
         <td className="p-2">{index + 1}</td>
         <td className="p-2">{element.nama}</td>
-        <td className="p-2">{element.NIK}</td>
+        <td className="p-2">{element.nik}</td>
         <td className="p-2">{element.hp}</td>
         <td className="p-2">
           <button
@@ -138,85 +180,17 @@ const AdminArsipPenduduk = () => {
     <div>
       <h1 className="text-xl font-bold text-primary">Dashboard</h1>
       <Breadcrumbs>{items}</Breadcrumbs>
-      {/* <div className="mx-auto my-4 grid max-w-fit grid-cols-3 gap-4 py-4">
-        <div className="flex h-[133px] w-[249px] flex-col justify-between bg-white p-4 text-primary shadow-lg">
-          <div className="flex justify-between">
-            <div className="flex flex-col">
-              <h1 className="text-3xl font-bold">124</h1>
-              <h4 className="text-sm font-medium">Surat Keluar</h4>
-            </div>
-            <div className="flex items-start">
-              <img src={Pengajuan} alt="" />
-            </div>
-          </div>
-          <Progress value={50} color="#2B6777" />
-          <small className="text-xs font-medium">124 Surat Keluar</small>
-        </div>
-        <div className="flex h-[133px] w-[249px] flex-col justify-between bg-white p-4 text-primary shadow-lg">
-          <div className="flex justify-between">
-            <div className="flex flex-col">
-              <h1 className="text-3xl font-bold">2</h1>
-              <h4 className="text-sm font-medium">Admin Cilodong</h4>
-            </div>
-            <div className="flex items-start">
-              <img src={Pengajuan} alt="" />
-            </div>
-          </div>
-          <Progress value={50} color="#2B6777" />
-          <small className="text-xs font-medium">2 Admin Cilodong</small>
-        </div>
-        <div className="flex h-[133px] w-[249px] flex-col justify-between bg-white p-4 text-primary shadow-lg">
-          <div className="flex justify-between">
-            <div className="flex flex-col">
-              <h1 className="text-3xl font-bold">43</h1>
-              <h4 className="text-sm font-medium">Data Pegawai</h4>
-            </div>
-            <div className="flex items-start">
-              <img src={Pengajuan} alt="" />
-            </div>
-          </div>
-          <Progress value={50} color="#2B6777" />
-          <small className="text-xs font-medium">43 Data Pegawai</small>
-        </div>
-      </div> */}
       <div className="">
         <div className="m-auto my-8 rounded-lg bg-[#C8D8E4] p-4">
-          <table className="my-2 w-full bg-white">
-            <thead className="w-full bg-cyan-800 text-left text-white">
-              <tr>
-                <th className="p-2">No.</th>
-                <th className="p-2">Nama</th>
-                <th className="p-2">NIK</th>
-                <th className="p-2">No. HP</th>
-                <th className="p-2">Actions</th>
-              </tr>
-            </thead>
-            <tbody>{tableRows}</tbody>
-          </table>
-          <Pagination.Root
-            total={totalPages}
-            value={pagination.active}
-            onChange={handlePageChange}
-            styles={{
-              control: {
-                backgroundColor: "#2B6777",
-                '&[type="button"]': {
-                  height: "74px",
-                },
-                "&[data-active]": {
-                  backgroundColor: "#2B6777",
-                },
-              },
+          <Table
+            loading={actionLoading}
+            pagination={{
+              position: ["bottomLeft"],
             }}
-            // color='#88CEEF'
-            size="md"
-          >
-            <Group position="left" spacing={0}>
-              <Pagination.Previous />
-              <Pagination.Items />
-              <Pagination.Next />
-            </Group>
-          </Pagination.Root>
+            dataSource={pengajuanData}
+            columns={columns}
+            className="custom-table"
+          />
         </div>
       </div>
       {/* <ModalUpdateStatus

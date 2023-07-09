@@ -45,11 +45,9 @@ const Login = () => {
   };
 
   return (
-    <div className="relative grid grid-cols-2">
-      <div className="h-screen bg-third"></div>
-      <div className="h-screen"></div>
-      <div className="grid-col-2 absolute bottom-0 left-0 right-0 top-0 m-auto grid h-[500px] w-2/3 grid-cols-2 rounded-lg border-[10px] border-primary ">
-        <div className="relative">
+    <div className="custom-background min-h-[100vh] px-2 py-10">
+      <div className="bottom-8 left-0 right-0 top-8 m-auto grid h-[90%] w-full max-w-5xl rounded-lg border-[10px] border-primary md:grid-cols-2">
+        <div className="relative hidden md:block">
           <img className="absolute left-7 top-7 w-32" src={Logo} alt="" />
           <img
             className="absolute bottom-0 left-0 right-0 top-0 m-auto"

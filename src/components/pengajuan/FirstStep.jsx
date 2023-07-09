@@ -1,6 +1,8 @@
 import { Button, NativeSelect } from "@mantine/core";
 import React, { useEffect, useState } from "react";
 import Ktp from "./syarat/Ktp";
+import KK from "./syarat/KK";
+import Nikah from "./syarat/Nikah";
 
 const dropdownData = [
   { label: "Kartu Tanda Pengenal (KTP)", value: "KTP" },
@@ -50,9 +52,9 @@ const FirstStep = ({ handler, form }) => {
       {selectedValue === "KTP" ? (
         <Ktp />
       ) : selectedValue === "KK" ? (
-        <p>Option 2 selected. Displaying Component B.</p>
+        <KK />
       ) : selectedValue === "NA" ? (
-        <p>Option 3 selected. Displaying Component C.</p>
+        <Nikah />
       ) : (
         <p>Pilih salah satu</p>
       )}

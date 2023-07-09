@@ -1,4 +1,4 @@
-import { Group, Pagination, Table } from "@mantine/core";
+import { Group, Loader, LoadingOverlay, Pagination } from "@mantine/core";
 import React, { useEffect, useState } from "react";
 import { auth, db } from "../config/firebase";
 import {
@@ -13,11 +13,14 @@ import {
 } from "firebase/firestore";
 import { usePagination } from "@mantine/hooks";
 import { useStore } from "../global/store";
+import { Space, Table } from "antd";
+import { useNavigate } from "react-router-dom";
 
 const LacakSurat = () => {
   const [pengajuanData, setPengajuanData] = useState([]);
-  const [totalItems, setTotalItems] = useState(0);
-  const { setActionLoading } = useStore();
+  const [pending, setPending] = useState(false);
+  const { actionLoading, setActionLoading } = useStore();
+  const navigate = useNavigate();
   // const [currentPage, setCurrentPage] = useState(1)
 
   const userId = auth.currentUser.uid;
@@ -29,61 +32,73 @@ const LacakSurat = () => {
   const pengajuanQuery = query(
     pengajuanRef,
     filter,
-    orderBy("timestamp", "desc"),
-    limit(itemsPerPage)
+    orderBy("timestamp", "desc")
   );
 
-  // Calculate the total number of pages
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-  const pagination = usePagination({ total: totalPages });
-
-  const handlePageChange = (page) => {
-    pagination.setPage(page);
-  };
+  const columns = [
+    //  {
+    //    title: "ID Surat",
+    //    dataIndex: "id",
+    //    key: "id",
+    //  },
+    {
+      title: "Nama Pengaju",
+      dataIndex: "nama",
+      key: "nama",
+    },
+    {
+      title: "Jenis Surat",
+      dataIndex: "jenisSurat",
+      key: "jenisSurat",
+    },
+    {
+      title: "Tanggal",
+      dataIndex: "timestamp",
+      key: "timestamp",
+      render: (text) => {
+        const timestamp = new Date(text.seconds * 1000);
+        return <a>{timestamp.toDateString()}</a>;
+      },
+    },
+    // {
+    //   title: "Actions",
+    //   key: "action",
+    //   render: (_, record) => (
+    //     <Space size="middle">
+    //       <button
+    //         //  onClick={() => handleModal(record)}
+    //         className="whitespace-nowrap rounded-3xl bg-green-800 p-2 text-white"
+    //       >
+    //         Update Status
+    //       </button>
+    //     </Space>
+    //   ),
+    // },
+  ];
 
   const fetchData = async () => {
-    setActionLoading(true);
-    const totalItemQuery = query(pengajuanRef, filter);
-    const snapshot = await getCountFromServer(totalItemQuery);
-    setTotalItems(snapshot.data().count);
+    setPending(true);
     try {
-      let newQuery = pengajuanQuery;
-
-      if (pagination.active > 1) {
-        const lastVisiblePayment = pengajuanData[pengajuanData.length - 1];
-        const lastVisibleTimestamp = lastVisiblePayment.timestamp;
-
-        newQuery = query(
-          pengajuanRef,
-          where("userID", "==", userId),
-          orderBy("timestamp", "desc"),
-          startAfter(lastVisibleTimestamp),
-          limit(itemsPerPage)
-        );
-      }
-
-      const snapshot = await getDocs(newQuery);
+      const snapshot = await getDocs(pengajuanQuery);
       const resultData = snapshot.docs.map((doc) => ({
         uid: doc.id,
         ...doc.data(),
       }));
       setPengajuanData(resultData);
-      setActionLoading(false);
+      setPending(false);
     } catch (error) {
       console.error("Error fetching payments:", error);
-      setActionLoading(false);
+      setPending(false);
     }
   };
   useEffect(() => {
     fetchData();
-    console.log(pengajuanData);
-  }, [pagination.active]);
+  }, []);
 
   const rows = pengajuanData.map((element, index) => {
     const timestamp = new Date(element.timestamp.seconds * 1000);
     return (
-      <tr key={element.id}>
+      <tr key={element.uid}>
         <td className="p-2">{index + 1}</td>
         <td className="p-2">{element.nama}</td>
         <td className="p-2">{element.jenisSurat}</td>
@@ -92,51 +107,41 @@ const LacakSurat = () => {
     );
   });
 
+  const rowProps = (record) => {
+    return {
+      onClick: () => {
+        navigate(`/lacak/${record.id}`);
+      },
+    };
+  };
+
   const tableRows = pengajuanData.length ? rows : null;
 
   return (
-    <div className="min-h-[800px] pt-[10vh]">
-      <h1 className="my-8 text-center text-5xl font-bold text-primary">
-        Data Table Pengajuan Surat
-      </h1>
-      <div className="m-auto my-8 w-[1024px] rounded-lg bg-[#C8D8E4] p-4">
-        <table className="my-2 w-full bg-white">
-          <thead className="w-full bg-cyan-800 text-left text-white">
-            <tr>
-              <th className="p-2">No.</th>
-              <th className="p-2">Nama Pengaju</th>
-              <th className="p-2">Jenis Surat</th>
-              <th className="p-2">Tanggal</th>
-            </tr>
-          </thead>
-          <tbody>{tableRows}</tbody>
-        </table>
-        <Pagination.Root
-          total={totalPages}
-          value={pagination.active}
-          onChange={handlePageChange}
-          styles={{
-            control: {
-              backgroundColor: "#2B6777",
-              '&[type="button"]': {
-                height: "74px",
-              },
-              "&[data-active]": {
-                backgroundColor: "#2B6777",
-              },
-            },
-          }}
-          // color='#88CEEF'
-          size="md"
-        >
-          <Group position="left" spacing={0}>
-            <Pagination.Previous />
-            <Pagination.Items />
-            <Pagination.Next />
-          </Group>
-        </Pagination.Root>
+    <>
+      <div className="relative min-h-[800px] pt-4">
+        <LoadingOverlay
+          loader={<Loader size={80} />}
+          visible={pending}
+          overlayBlur={1}
+        />
+        <h1 className="my-8 text-center text-5xl font-bold text-primary">
+          Data Table Pengajuan Surat
+        </h1>
+        <div className="m-auto my-8 w-[1024px] rounded-lg bg-[#C8D8E4] p-4">
+          <Table
+            loading={actionLoading}
+            pagination={{
+              position: ["bottomLeft"],
+            }}
+            dataSource={pengajuanData}
+            columns={columns}
+            className="custom-table"
+            onRow={rowProps}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

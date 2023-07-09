@@ -16,6 +16,7 @@ import Dashboard from "./pages/admin/Dashboard";
 import AdminPengajuanSurat from "./pages/admin/AdminPengajuanSurat";
 import AdminSuratKeluar from "./pages/admin/AdminSuratKeluar";
 import AdminArsipPenduduk from "./pages/admin/AdminArsipPenduduk";
+import LacakSuratDetail from "./pages/LacakSuratDetail";
 
 function App() {
   const {
@@ -26,6 +27,8 @@ function App() {
     isLoggedIn,
     setLoggedIn,
     setUserData,
+    setAdmin,
+    isAdmin,
   } = useStore();
 
   useEffect(() => {
@@ -43,7 +46,7 @@ function App() {
             if (docSnap) {
               console.log(docSnap.data());
               // TODO: enable this later
-              // setAdmin(docSnap.data().isAdmin)
+              setAdmin(docSnap.data().isAdmin);
               // console.log(isAdmin)
               setUserData(docSnap.data());
             }
@@ -63,8 +66,7 @@ function App() {
     auth.currentUser !== null ? <Navigate to={"/"} /> : <Outlet />;
   const UserCheck = () =>
     auth.currentUser === null ? <Navigate to={"/"} /> : <Outlet />;
-  // TODO: enable this later
-  // const AdminCheck = () => (isAdmin ? <Outlet /> : <Navigate to={'/'} />)
+  const AdminCheck = () => (isAdmin ? <Outlet /> : <Navigate to={"/"} />);
 
   return authRefreshing ? (
     <div className="flex h-screen w-full items-center justify-center">
@@ -76,7 +78,7 @@ function App() {
       />
     </div>
   ) : (
-    <>
+    <div className="relative">
       <LoadingOverlay
         loader={<Loader size={80} />}
         visible={actionLoading}
@@ -89,6 +91,7 @@ function App() {
           <Route element={<UserCheck />}>
             <Route path="/pengajuan" element={<PengajuanSurat />} />
             <Route path="/lacak" element={<LacakSurat />} />
+            <Route path="/lacak/:id" element={<LacakSuratDetail />} />
           </Route>
         </Route>
         <Route element={<LoginCheck />}>
@@ -111,14 +114,16 @@ function App() {
           </Route> */}
         </Route>
         /* CHECK IF USER ISADMIN
-        <Route path="/admin" element={<AdminTemplate />}>
-          <Route index element={<Dashboard />} />
-          <Route path="/admin/pengajuan" element={<AdminPengajuanSurat />} />
-          <Route path="/admin/surat-keluar" element={<AdminSuratKeluar />} />
-          <Route
-            path="/admin/arsip-penduduk"
-            element={<AdminArsipPenduduk />}
-          />
+        <Route element={<AdminCheck />}>
+          <Route path="/admin" element={<AdminTemplate />}>
+            <Route index element={<Dashboard />} />
+            <Route path="/admin/pengajuan" element={<AdminPengajuanSurat />} />
+            <Route path="/admin/surat-keluar" element={<AdminSuratKeluar />} />
+            <Route
+              path="/admin/arsip-penduduk"
+              element={<AdminArsipPenduduk />}
+            />
+          </Route>
         </Route>
         {/* <Route element={<AdminCheck />}>
           <Route path="/admin" element={<AdminTemplate />}>
@@ -126,7 +131,7 @@ function App() {
           </Route>
         </Route> */}
       </Routes>
-    </>
+    </div>
   );
 }
 

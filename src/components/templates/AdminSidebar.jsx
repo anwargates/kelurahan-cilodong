@@ -17,7 +17,7 @@ const AdminSidebar = () => {
       withBorder={false}
       bg={"#FFFFFF"}
       p="md"
-      width={{ base: 300 }}
+      width={{ base: 250 }}
       zIndex={1}
     >
       <Navbar.Section>
@@ -32,7 +32,7 @@ const AdminSidebar = () => {
       <Navbar.Section mt="md">
         <div className="text-primary">
           <h3 className="my-4 text-lg font-semibold">Kelola Surat</h3>
-          <ul className="text-sm font-bold">
+          <ul className="flex flex-col gap-6 text-sm font-bold">
             <li
               onClick={() => navigate("/admin/pengajuan")}
               className="flex items-center justify-start gap-2 hover:cursor-pointer"
@@ -60,7 +60,7 @@ const AdminSidebar = () => {
       <Navbar.Section grow mt="md">
         <div className="text-primary">
           <h3 className="my-4 text-lg font-semibold">Kelola Akun</h3>
-          <ul className="text-sm font-bold">
+          <ul className="flex flex-col gap-6 text-sm font-bold">
             <li className="flex items-center justify-start gap-2 hover:cursor-pointer">
               <img src={AkunAdmin} alt="" />
               <span>Akun Admin</span>

@@ -8,7 +8,7 @@
   }
 
   .input-field {
-    @apply w-full h-10 rounded-md border-2 border-white;
+    @apply h-10 w-full rounded-md border-2 border-white;
   }
 
   .inner-input {
@@ -16,7 +16,7 @@
   }
 
   .btn-submit {
-    @apply h-10 w-4/6 m-auto rounded-lg bg-third px-5 text-2xl font-bold text-white drop-shadow-md hover:cursor-pointer;
+    @apply m-auto h-10 w-4/6 rounded-lg bg-third px-5 text-2xl font-bold text-white drop-shadow-md hover:cursor-pointer;
   }
 
   .socmed-button {
@@ -61,5 +61,30 @@
 
   .testimony-dots li.slick-active {
     @apply w-10 bg-blue;
+  }
+
+  .custom-table .ant-table-thead > tr > th {
+    background-color: #2b6777;
+    color: #ffffff;
+  }
+
+  .custom-table .ant-pagination-item-active a {
+    background-color: #2b6777 !important;
+    color: #ffffff;
+  }
+
+  .custom-table .ant-pagination-item-active a:hover {
+    background-color: #2b6777 !important;
+    color: #ffffff;
+  }
+
+  .custom-background {
+    background: linear-gradient(
+      to right,
+      #c8d8e4 0%,
+      #c8d8e4 50%,
+      #ffffff 50%,
+      #ffffff 100%
+    );
   }
 }

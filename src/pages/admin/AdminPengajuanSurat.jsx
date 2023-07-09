@@ -4,6 +4,7 @@ import {
   Anchor,
   Breadcrumbs,
   Group,
+  Image,
   Modal,
   NativeSelect,
   Pagination,
@@ -11,22 +12,29 @@ import {
   Select,
 } from "@mantine/core";
 import {
+  addDoc,
   collection,
+  doc,
   getCountFromServer,
   getDocs,
   limit,
   orderBy,
   query,
+  serverTimestamp,
+  setDoc,
   startAfter,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { auth, db } from "../../config/firebase";
 import { usePagination } from "@mantine/hooks";
 import { useStore } from "../../global/store";
+import { Space, Table } from "antd";
+import moment from "moment/moment";
 
 const items = [
   { title: "Home", href: "#" },
-  { title: "Dashboard", href: "#" },
+  { title: "Pengajuan Surat", href: "#" },
 ].map((item, index) => (
   <Anchor color="#2B6777" href={item.href} key={index}>
     {item.title}
@@ -35,36 +43,103 @@ const items = [
 
 const AdminPengajuanSurat = () => {
   const [pengajuanData, setPengajuanData] = useState([]);
+  const [searchText, setSearchText] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("All");
+  const [filteredData, setFilteredData] = useState(null);
+  const [paginatedData, setPaginatedData] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [selectedData, setSelectedData] = useState({});
-  const [filtered, setFiltered] = useState("NA");
+  const [filtered, setFiltered] = useState("KTP");
   const [ktpCount, setKtpCount] = useState(0);
   const [kkCount, setKkCount] = useState(0);
   const [naCount, setNaCount] = useState(0);
-  const { setActionLoading } = useStore();
+  const [showModalBukti, setShowModalBukti] = useState(false);
+  // TODO: causes loop
+  // const { actionLoading, setActionLoading } = useStore();
+  const [actionLoading, setActionLoading] = useState(false);
+
   // const [currentPage, setCurrentPage] = useState(1)
 
   const userId = auth.currentUser.uid;
-
-  const itemsPerPage = 5;
-
   const pengajuanRef = collection(db, "pengajuan");
-  const filters = where("jenisSurat", "==", filtered);
-  const pengajuanQuery = query(
-    pengajuanRef,
-    filters,
-    orderBy("timestamp", "desc"),
-    limit(itemsPerPage)
-  );
 
-  // Calculate the total number of pages
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const columns = [
+    {
+      title: "ID Surat",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "Nama Pengaju",
+      dataIndex: "nama",
+      key: "nama",
+    },
+    {
+      title: "NIK",
+      dataIndex: "nik",
+      key: "nik",
+    },
+    {
+      title: "Jenis Surat",
+      dataIndex: "jenisSurat",
+      key: "jenisSurat",
+    },
+    {
+      title: "Tanggal",
+      dataIndex: "timestamp",
+      key: "timestamp",
+      render: (text) => {
+        const timestamp = new Date(text.seconds * 1000);
+        return <a>{timestamp.toDateString()}</a>;
+      },
+    },
+    {
+      title: "No. Hp",
+      dataIndex: "hp",
+      key: "hp",
+    },
+    {
+      title: "Status Pengajuan",
+      dataIndex: "statusPengajuan",
+      key: "statusPengajuan",
+    },
+    {
+      title: "Actions",
+      key: "action",
+      fixed: "right",
+      width: 140,
+      render: (_, record) => (
+        <Space size="middle">
+          <button
+            onClick={() => handleModal(record)}
+            className="whitespace-nowrap rounded-3xl bg-green-800 p-2 text-white"
+          >
+            Update Status
+          </button>
+        </Space>
+      ),
+    },
+  ];
 
-  const pagination = usePagination({ total: totalPages });
+  const handleFilter = (category) => {
+    const filteredResults = pengajuanData.filter((data) => {
+      const nameMatch = data.jenisSurat
+        .toLowerCase()
+        .includes(category.toLowerCase());
+      const categoryMatch =
+        categoryFilter === "All" || data.category === categoryFilter;
 
-  const handlePageChange = (page) => {
-    pagination.setPage(page);
+      return nameMatch && categoryMatch;
+    });
+
+    setFilteredData(filteredResults);
+  };
+
+  const handleReset = () => {
+    setSearchText("");
+    setCategoryFilter("All");
+    setFilteredData(null);
   };
 
   const getCountAll = async () => {
@@ -81,41 +156,26 @@ const AdminPengajuanSurat = () => {
 
   const fetchData = async () => {
     setActionLoading(true);
-    const totalItemQuery = query(pengajuanRef, filters);
-    const snapshot = await getCountFromServer(totalItemQuery);
-    setTotalItems(snapshot.data().count);
     try {
-      let newQuery = pengajuanQuery;
-
-      if (pagination.active > 1) {
-        const lastVisiblePayment = pengajuanData[pengajuanData.length - 1];
-        const lastVisibleTimestamp = lastVisiblePayment.timestamp;
-
-        newQuery = query(
-          pengajuanRef,
-          orderBy("timestamp", "desc"),
-          startAfter(lastVisibleTimestamp),
-          limit(itemsPerPage)
-        );
-      }
-
-      const snapshot = await getDocs(newQuery);
-      const resultData = snapshot.docs.map((doc) => ({
+      const pengajuanQuery = query(pengajuanRef, orderBy("timestamp", "desc"));
+      const snapshot = await getDocs(pengajuanQuery);
+      const resultData = snapshot.docs.map((doc, index) => ({
         uid: doc.id,
         ...doc.data(),
       }));
       setPengajuanData(resultData);
+      console.log(resultData);
       setActionLoading(false);
     } catch (error) {
       console.error("Error fetching payments:", error);
       setActionLoading(false);
     }
   };
+
   useEffect(() => {
     fetchData();
     getCountAll();
-    console.log(pengajuanData);
-  }, [pagination.active, filtered]);
+  }, []);
 
   const handleModal = (data) => {
     setSelectedData(data);
@@ -123,39 +183,25 @@ const AdminPengajuanSurat = () => {
   };
   const handleCloseModal = () => {
     setShowModal(false);
+    fetchData();
+  };
+
+  const handleCloseModalLihatBukti = () => {
+    setShowModalBukti(false);
   };
 
   const handleChangeSurat = (category) => {
-    setFiltered(category);
-    pagination.setPage(1);
+    handleFilter(category);
   };
 
-  const rows = pengajuanData.map((element, index) => {
-    const timestamp = new Date(element.timestamp.seconds * 1000);
-    return (
-      <tr key={element.uid}>
-        <td className="p-2">{index + 1}</td>
-        <td className="p-2">{element.uid}</td>
-        <td className="p-2">
-          {element.nama} ({element.nik})
-        </td>
-        <td className="p-2">{element.jenisSurat}</td>
-        <td className="p-2">{timestamp.toDateString()}</td>
-        <td className="p-2">{element.hp}</td>
-        <td className="p-2">{element.status}</td>
-        <td className="p-2">
-          <button
-            onClick={() => handleModal(element)}
-            className="whitespace-nowrap rounded-3xl bg-green-800 p-2 text-white"
-          >
-            Update Status
-          </button>
-        </td>
-      </tr>
-    );
-  });
-
-  const tableRows = pengajuanData.length ? rows : null;
+  const rowProps = (record) => {
+    return {
+      onClick: () => {
+        setSelectedData(record);
+        setShowModalBukti(true);
+      },
+    };
+  };
 
   return (
     <div>
@@ -164,7 +210,7 @@ const AdminPengajuanSurat = () => {
       <div className="mx-auto my-4 grid max-w-fit grid-cols-3 gap-4 py-4">
         <div
           onClick={() => handleChangeSurat("KTP")}
-          className="flex h-[133px] w-[249px] flex-col justify-between bg-white p-4 text-primary shadow-lg"
+          className="flex h-[133px] w-[249px] flex-col justify-between bg-white p-4 text-primary shadow-lg hover:cursor-pointer"
         >
           <div className="flex justify-between">
             <div className="flex flex-col">
@@ -182,7 +228,7 @@ const AdminPengajuanSurat = () => {
         </div>
         <div
           onClick={() => handleChangeSurat("KK")}
-          className="flex h-[133px] w-[249px] flex-col justify-between bg-white p-4 text-primary shadow-lg"
+          className="flex h-[133px] w-[249px] flex-col justify-between bg-white p-4 text-primary shadow-lg hover:cursor-pointer"
         >
           <div className="flex justify-between">
             <div className="flex flex-col">
@@ -200,7 +246,7 @@ const AdminPengajuanSurat = () => {
         </div>
         <div
           onClick={() => handleChangeSurat("NA")}
-          className="flex h-[133px] w-[249px] flex-col justify-between bg-white p-4 text-primary shadow-lg"
+          className="flex h-[133px] w-[249px] flex-col justify-between bg-white p-4 text-primary shadow-lg hover:cursor-pointer"
         >
           <div className="flex justify-between">
             <div className="flex flex-col">
@@ -219,50 +265,28 @@ const AdminPengajuanSurat = () => {
       </div>
       <div className="">
         <div className="m-auto my-8 rounded-lg bg-[#C8D8E4] p-4">
-          <table className="my-2 w-full bg-white">
-            <thead className="w-full bg-cyan-800 text-left text-white">
-              <tr>
-                <th className="p-2">No.</th>
-                <th className="p-2">ID Surat</th>
-                <th className="p-2">Nama Pengaju (NIK)</th>
-                <th className="p-2">Jenis Surat</th>
-                <th className="p-2">Tanggal</th>
-                <th className="p-2">No. Hp</th>
-                <th className="p-2">Status Pengajuan</th>
-                <th className="p-2">Actions</th>
-              </tr>
-            </thead>
-            <tbody>{tableRows}</tbody>
-          </table>
-          <Pagination.Root
-            total={totalPages}
-            value={pagination.active}
-            onChange={handlePageChange}
-            styles={{
-              control: {
-                backgroundColor: "#2B6777",
-                '&[type="button"]': {
-                  height: "74px",
-                },
-                "&[data-active]": {
-                  backgroundColor: "#2B6777",
-                },
-              },
+          <Table
+            scroll={{ x: "100vw" }}
+            loading={actionLoading}
+            pagination={{
+              position: ["bottomLeft"],
             }}
-            // color='#88CEEF'
-            size="md"
-          >
-            <Group position="left" spacing={0}>
-              <Pagination.Previous />
-              <Pagination.Items />
-              <Pagination.Next />
-            </Group>
-          </Pagination.Root>
+            dataSource={filteredData ?? pengajuanData}
+            columns={columns}
+            className="custom-table"
+            rowKey="uid"
+            onRow={rowProps}
+          />
         </div>
       </div>
       <ModalUpdateStatus
         show={showModal}
         close={handleCloseModal}
+        data={selectedData}
+      />
+      <ModalViewBukti
+        show={showModalBukti}
+        close={handleCloseModalLihatBukti}
         data={selectedData}
       />
     </div>
@@ -290,45 +314,176 @@ const dropdownData = [
     label: "Ditandatangani Lurah/Selesai",
     value: "5",
   },
+  {
+    label: "Surat dicetak",
+    value: "6",
+  },
 ];
 
-const ModalUpdateStatus = ({ show, close, data }) => (
-  <Modal.Root opened={show} onClose={close} centered>
-    <Modal.Overlay />
-    <Modal.Content>
-      <Modal.Header
-        style={{
-          background: "#2B6777",
-          justifyContent: "center",
-        }}
-      >
-        <Modal.Title
+const ModalUpdateStatus = ({ show, close, data }) => {
+  const { actionLoading, setActionLoading } = useStore();
+  const [selected, setSelected] = useState("");
+  console.log(data);
+
+  const getStatus = (status) => {
+    console.log(status);
+    const found = dropdownData.find((i) => i.value === status);
+    return found.label;
+  };
+
+  const handleNotify = () => {
+    addDoc(collection(db, "notifications"), {
+      idSurat: data.uid,
+      receiver: data.userID,
+      sender: "admin",
+      message: `Status pengajuan surat anda sedang ${getStatus(selected)}`,
+      title: "Progress Pengajuan Surat",
+      read: false,
+    })
+      .then((res) => {
+        console.log("create notification success", res);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  const handleSuratKeluar = async () => {
+    setDoc(doc(db, "suratKeluar", data.uid), {
+      idPengaju: data.userID,
+      kodeSurat: data.id,
+      namaPengaju: data.nama,
+      namaSurat: `[${data.nama}-${data.nik}]-${data.jenisSurat}`,
+      tanggalTerbit: serverTimestamp(),
+    })
+      .then((res) => {
+        console.log("create doc success", res);
+        // handleNotify();
+        // setActionLoading(false);
+      })
+      .catch((e) => {
+        console.log(e);
+        // setActionLoading(false);
+      });
+  };
+
+  const handleUpdateStatus = async () => {
+    setActionLoading(true);
+    try {
+      const documentRef = doc(db, "pengajuan", data.uid);
+      const newData = {
+        idStatus: selected,
+        statusPengajuan: getStatus(selected),
+      };
+
+      await updateDoc(documentRef, newData);
+      if (selected === "6") await handleSuratKeluar();
+      console.log("Document updated successfully!");
+      handleNotify();
+      setActionLoading(false);
+      close();
+    } catch (error) {
+      console.error("Error updating document:", error);
+      setActionLoading(false);
+    }
+  };
+
+  return (
+    <Modal.Root opened={show} onClose={close} centered>
+      <Modal.Overlay />
+      <Modal.Content>
+        <Modal.Header
           style={{
-            color: "white",
-            textAlign: "center",
-            fontSize: "32px",
-            fontWeight: "700",
+            background: "#2B6777",
+            justifyContent: "center",
           }}
         >
-          Update Status
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <div className="m-2 flex flex-col gap-4">
-          <h1>Update Pengajuan ID : {data.uid}</h1>
-          <NativeSelect data={dropdownData} placeholder="Status Pengajuan" />
-          <div className="flex justify-evenly">
-            <button className="rounded-lg bg-gray-600 px-6 py-2 text-white">
-              Batal
-            </button>
-            <button className="rounded-lg bg-primary px-6 py-2 text-white">
-              Update
-            </button>
+          <Modal.Title
+            style={{
+              color: "white",
+              textAlign: "center",
+              fontSize: "32px",
+              fontWeight: "700",
+            }}
+          >
+            Update Status
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="m-2 flex flex-col gap-4">
+            <h1>Update Pengajuan ID : {data.uid}</h1>
+            <NativeSelect
+              defaultValue={data.idStatus}
+              data={dropdownData}
+              onChange={(event) => setSelected(event.currentTarget.value)}
+              placeholder="Status Pengajuan"
+            />
+            <div className="flex justify-evenly">
+              <button
+                onClick={close}
+                className="rounded-lg bg-gray-600 px-6 py-2 text-white"
+              >
+                Batal
+              </button>
+              <button
+                onClick={handleUpdateStatus}
+                className="rounded-lg bg-primary px-6 py-2 text-white"
+              >
+                Update
+              </button>
+            </div>
           </div>
-        </div>
-      </Modal.Body>
-    </Modal.Content>
-  </Modal.Root>
-);
+        </Modal.Body>
+      </Modal.Content>
+    </Modal.Root>
+  );
+};
+
+const ModalViewBukti = ({ show, close, data }) => {
+  const { actionLoading, setActionLoading } = useStore();
+  const [selected, setSelected] = useState("");
+  console.log(data);
+
+  return (
+    <Modal.Root opened={show} onClose={close} centered>
+      <Modal.Overlay />
+      <Modal.Content>
+        <Modal.Header
+          style={{
+            background: "#2B6777",
+            justifyContent: "center",
+          }}
+        >
+          <Modal.Title
+            style={{
+              color: "white",
+              textAlign: "center",
+              fontSize: "32px",
+              fontWeight: "700",
+            }}
+          >
+            Update Status
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="m-2 flex flex-col gap-4">
+            <h1>Bukti-bukti</h1>
+            <Image src={data.scanKK} />
+            <Image src={data.suratPengantar} />
+            <Image src={data.docTambahan} />
+            <div className="flex justify-evenly">
+              <button
+                onClick={close}
+                className="rounded-lg bg-gray-600 px-6 py-2 text-white"
+              >
+                Batal
+              </button>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal.Content>
+    </Modal.Root>
+  );
+};
 
 export default AdminPengajuanSurat;

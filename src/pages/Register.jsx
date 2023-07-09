@@ -61,6 +61,7 @@ const Register = () => {
       hp: data.hp,
       nama: data.nama,
       nik: data.nik,
+      isAdmin: false,
     })
       .then((res) => {
         console.log("create doc success", res);
@@ -81,11 +82,9 @@ const Register = () => {
 
   return (
     <>
-      <div className="relative grid grid-cols-2">
-        <div className="h-screen bg-third"></div>
-        <div className="h-screen"></div>
-        <div className="grid-col-2 absolute bottom-8 left-0 right-0 top-8 m-auto grid w-2/3 grid-cols-2 rounded-lg border-[10px] border-primary ">
-          <div className="relative">
+      <div className="custom-background min-h-[100vh] px-2 py-10">
+        <div className="bottom-8 left-0 right-0 top-8 m-auto grid h-[90%] w-full max-w-5xl rounded-lg border-[10px] border-primary md:grid-cols-2">
+          <div className="relative hidden md:block">
             <img className="absolute left-7 top-7 w-32" src={Logo} alt="" />
             <img
               className="absolute bottom-0 left-0 right-0 top-0 m-auto"
@@ -93,7 +92,7 @@ const Register = () => {
               alt=""
             />
           </div>
-          <div className="flex flex-col gap-10 bg-primary px-14 py-12 text-white">
+          <div className="flex flex-col gap-10 bg-primary py-12 text-white sm:px-14">
             <div>
               <h1 className="text-3xl font-bold">Register</h1>
             </div>
@@ -112,15 +111,15 @@ const Register = () => {
                   })}
                 />
               </div>
-              <div className="flex gap-7">
+              <div className="flex flex-col gap-7 sm:flex-row">
                 <div className="input-field flex">
                   <input
-                    className="inner-input"
+                    className="inner-input pr-0"
                     type={showPassword ? "text" : "password"}
                     placeholder="Masukkan Password"
                     {...register("password", { required: true, minLength: 6 })}
                   />
-                  <div className="flex items-center justify-center px-4">
+                  <div className="flex items-center justify-center px-2">
                     {showPassword ? (
                       <BsEyeSlash onClick={togglePasswordVisibility} />
                     ) : (
@@ -130,7 +129,7 @@ const Register = () => {
                 </div>
                 <div className="input-field flex">
                   <input
-                    className="inner-input"
+                    className="inner-input pr-0"
                     type={showPassword ? "text" : "password"}
                     placeholder="Konfirmasi Password"
                     {...register("confirmPassword", {
@@ -140,7 +139,7 @@ const Register = () => {
                         value === watch("password") || "Passwords do not match",
                     })}
                   />
-                  <div className="flex items-center justify-center px-4">
+                  <div className="flex items-center justify-center px-2">
                     {showPassword ? (
                       <BsEyeSlash onClick={togglePasswordVisibility} />
                     ) : (

@@ -32,17 +32,17 @@ export const Footer = () => {
           </div>
           <div className="flex flex-col gap-9">
             <h1 className="text-4xl font-bold">Lokasi</h1>
-            <div>
+            <div className="relative h-full overflow-hidden">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3964.7523069992108!2d106.84170508456084!3d-6.425861146231156!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69ea4bfafaa4f1%3A0x55e456f36ace1e98!2sCilodong%20Sub-District%20Office!5e0!3m2!1sen!2sid!4v1685786700663!5m2!1sen!2sid"
-                width="600"
-                height="240"
+                width="100%"
+                height="100%"
                 loading="lazy"
               />
             </div>
           </div>
         </div>
-        <div className="m-auto h-[6px] w-[1280px] bg-white" />
+        <div className="m-auto h-[6px] min-w-[90%] bg-white" />
         <p className="my-4 text-center text-white">
           Copyright © 2023 Portal Kelurahan Kota Depok
         </p>

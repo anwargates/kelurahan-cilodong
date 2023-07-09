@@ -19,7 +19,7 @@ const Ktp = () => {
         </ul>
       </div>
       <div>
-        Prasyarat Pembuatan KTP Baru :
+        Prasyarat Pembuatan KTP Rusak :
         <ul className="list-inside list-disc text-base font-medium">
           <li>Scan Kartu Tanda Penduduk (KTP) yang rusak</li>
           <li>Scan Kartu Keluarga (KK)</li>

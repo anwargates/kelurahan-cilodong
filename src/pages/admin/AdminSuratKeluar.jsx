@@ -24,6 +24,7 @@ import { auth, db } from "../../config/firebase";
 import { usePagination } from "@mantine/hooks";
 import { useStore } from "../../global/store";
 import { BiTrash } from "react-icons/bi";
+import { Space, Table } from "antd";
 
 const items = [
   { title: "Home", href: "/admin" },
@@ -39,50 +40,57 @@ const AdminSuratKeluar = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [selectedData, setSelectedData] = useState({});
-  const { setActionLoading } = useStore();
+  // const { actionLoading, setActionLoading } = useStore();
+  const [actionLoading, setActionLoading] = useState(false);
   // const [currentPage, setCurrentPage] = useState(1)
 
   const userId = auth.currentUser.uid;
-
-  const itemsPerPage = 5;
-
-  const pengajuanRef = collection(db, "pengajuan");
-  const pengajuanQuery = query(
-    pengajuanRef,
-    orderBy("timestamp", "desc"),
-    limit(itemsPerPage)
-  );
-
-  // Calculate the total number of pages
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-  const pagination = usePagination({ total: totalPages });
-
-  const handlePageChange = (page) => {
-    pagination.setPage(page);
-  };
+  const columns = [
+    {
+      title: "Nama Surat",
+      dataIndex: "namaSurat",
+      key: "namaSurat",
+    },
+    {
+      title: "Tanggal",
+      dataIndex: "tanggalTerbit",
+      key: "tanggalTerbit",
+      render: (text) => {
+        const timestamp = new Date(text.seconds * 1000);
+        return <a>{timestamp.toDateString()}</a>;
+      },
+    },
+    {
+      title: "ID Surat",
+      dataIndex: "uid",
+      key: "uid",
+    },
+    {
+      title: "Actions",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <button
+            onClick={() => handleModal(record)}
+            className="rounded-full bg-red-800 p-2 text-white"
+          >
+            <BiTrash />
+          </button>
+        </Space>
+      ),
+    },
+  ];
 
   const fetchData = async () => {
     setActionLoading(true);
-    const snapshot = await getCountFromServer(pengajuanRef);
-    setTotalItems(snapshot.data().count);
     try {
-      let newQuery = pengajuanQuery;
-
-      if (pagination.active > 1) {
-        const lastVisiblePayment = pengajuanData[pengajuanData.length - 1];
-        const lastVisibleTimestamp = lastVisiblePayment.timestamp;
-
-        newQuery = query(
-          pengajuanRef,
-          orderBy("timestamp", "desc"),
-          startAfter(lastVisibleTimestamp),
-          limit(itemsPerPage)
-        );
-      }
-
-      const snapshot = await getDocs(newQuery);
-      const resultData = snapshot.docs.map((doc) => ({
+      const pengajuanRef = collection(db, "suratKeluar");
+      const pengajuanQuery = query(
+        pengajuanRef,
+        orderBy("tanggalTerbit", "desc")
+      );
+      const snapshot = await getDocs(pengajuanQuery);
+      const resultData = snapshot.docs.map((doc, index) => ({
         uid: doc.id,
         ...doc.data(),
       }));
@@ -96,7 +104,7 @@ const AdminSuratKeluar = () => {
   useEffect(() => {
     fetchData();
     console.log(pengajuanData);
-  }, [pagination.active]);
+  }, []);
 
   const handleModal = (data) => {
     setSelectedData(data);
@@ -106,111 +114,21 @@ const AdminSuratKeluar = () => {
     setShowModal(false);
   };
 
-  const rows = pengajuanData.map((element, index) => {
-    const timestamp = new Date(element.timestamp.seconds * 1000);
-    return (
-      <tr key={element.uid}>
-        <td className="p-2">{index + 1}</td>
-        <td className="p-2">{element.nama}</td>
-        <td className="p-2">{timestamp.toDateString()}</td>
-        <td className="p-2">{element.uid}</td>
-        <td className="p-2">
-          <button
-            onClick={() => handleModal(element)}
-            className="rounded-full bg-red-800 p-2 text-white"
-          >
-            <BiTrash />
-          </button>
-        </td>
-      </tr>
-    );
-  });
-
-  const tableRows = pengajuanData.length ? rows : null;
-
   return (
     <div>
       <h1 className="text-xl font-bold text-primary">Dashboard</h1>
       <Breadcrumbs>{items}</Breadcrumbs>
-      {/* <div className="mx-auto my-4 grid max-w-fit grid-cols-3 gap-4 py-4">
-        <div className="flex h-[133px] w-[249px] flex-col justify-between bg-white p-4 text-primary shadow-lg">
-          <div className="flex justify-between">
-            <div className="flex flex-col">
-              <h1 className="text-3xl font-bold">124</h1>
-              <h4 className="text-sm font-medium">Surat Keluar</h4>
-            </div>
-            <div className="flex items-start">
-              <img src={Pengajuan} alt="" />
-            </div>
-          </div>
-          <Progress value={50} color="#2B6777" />
-          <small className="text-xs font-medium">124 Surat Keluar</small>
-        </div>
-        <div className="flex h-[133px] w-[249px] flex-col justify-between bg-white p-4 text-primary shadow-lg">
-          <div className="flex justify-between">
-            <div className="flex flex-col">
-              <h1 className="text-3xl font-bold">2</h1>
-              <h4 className="text-sm font-medium">Admin Cilodong</h4>
-            </div>
-            <div className="flex items-start">
-              <img src={Pengajuan} alt="" />
-            </div>
-          </div>
-          <Progress value={50} color="#2B6777" />
-          <small className="text-xs font-medium">2 Admin Cilodong</small>
-        </div>
-        <div className="flex h-[133px] w-[249px] flex-col justify-between bg-white p-4 text-primary shadow-lg">
-          <div className="flex justify-between">
-            <div className="flex flex-col">
-              <h1 className="text-3xl font-bold">43</h1>
-              <h4 className="text-sm font-medium">Data Pegawai</h4>
-            </div>
-            <div className="flex items-start">
-              <img src={Pengajuan} alt="" />
-            </div>
-          </div>
-          <Progress value={50} color="#2B6777" />
-          <small className="text-xs font-medium">43 Data Pegawai</small>
-        </div>
-      </div> */}
       <div className="">
         <div className="m-auto my-8 rounded-lg bg-[#C8D8E4] p-4">
-          <table className="my-2 w-full bg-white">
-            <thead className="w-full bg-cyan-800 text-left text-white">
-              <tr>
-                <th className="p-2">No.</th>
-                <th className="p-2">Nama Surat</th>
-                <th className="p-2">Tanggal</th>
-                <th className="p-2">ID Surat</th>
-                <th className="p-2">Actions</th>
-              </tr>
-            </thead>
-            <tbody>{tableRows}</tbody>
-          </table>
-          <Pagination.Root
-            total={totalPages}
-            value={pagination.active}
-            onChange={handlePageChange}
-            styles={{
-              control: {
-                backgroundColor: "#2B6777",
-                '&[type="button"]': {
-                  height: "74px",
-                },
-                "&[data-active]": {
-                  backgroundColor: "#2B6777",
-                },
-              },
+          <Table
+            loading={actionLoading}
+            pagination={{
+              position: ["bottomLeft"],
             }}
-            // color='#88CEEF'
-            size="md"
-          >
-            <Group position="left" spacing={0}>
-              <Pagination.Previous />
-              <Pagination.Items />
-              <Pagination.Next />
-            </Group>
-          </Pagination.Root>
+            dataSource={pengajuanData}
+            columns={columns}
+            className="custom-table"
+          />
         </div>
       </div>
       {/* <ModalUpdateStatus
