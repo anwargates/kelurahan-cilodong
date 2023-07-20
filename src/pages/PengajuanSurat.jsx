@@ -1,19 +1,9 @@
 import { Stepper } from "@mantine/core";
-import React, { useEffect, useState } from "react";
-import FirstStep from "../components/pengajuan/FirstStep";
 import { useForm } from "@mantine/form";
-import {
-  Timestamp,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
+import React, { useState } from "react";
+import FirstStep from "../components/pengajuan/FirstStep";
 import SecondStep from "../components/pengajuan/SecondStep";
 import ThirdStep from "../components/pengajuan/ThirdStep";
-import { auth, db } from "../config/firebase";
 import { useStore } from "../global/store";
 
 const generateId = () => {

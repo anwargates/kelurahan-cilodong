@@ -65,10 +65,10 @@ const AdminSidebar = () => {
               <img src={AkunAdmin} alt="" />
               <span>Akun Admin</span>
             </li>
-            <li className="flex items-center justify-start gap-2 hover:cursor-pointer">
+            {/* <li className="flex items-center justify-start gap-2 hover:cursor-pointer">
               <img src={DataPegawai} alt="" />
               <span>Data Pegawai</span>
-            </li>
+            </li> */}
           </ul>
         </div>
       </Navbar.Section>

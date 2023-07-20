@@ -112,6 +112,12 @@ const LacakSuratDetail = () => {
             <Stepper.Step label="Selesai / Dapat Diambil" />
           </Stepper>
         </div>
+        {item.IdStatus === "3" && item.opsiSurat === "KTP1" ? (
+          <h1 className="text-center">
+            Pengajuan anda telah diterima, silakan ke kelurahan untuk melakukan
+            foto dan melengkapi berkas lainnya
+          </h1>
+        ) : null}
       </div>
     </div>
   );

@@ -12,6 +12,8 @@ import {
 } from "@mantine/core";
 import {
   collection,
+  deleteDoc,
+  doc,
   getCountFromServer,
   getDocs,
   limit,
@@ -131,12 +133,74 @@ const AdminSuratKeluar = () => {
           />
         </div>
       </div>
-      {/* <ModalUpdateStatus
+      <ModalDeleteConfirm
         show={showModal}
         close={handleCloseModal}
         data={selectedData}
-      /> */}
+      />
     </div>
+  );
+};
+
+const ModalDeleteConfirm = ({ show, close, data }) => {
+  const { actionLoading, setActionLoading } = useStore();
+  const [selected, setSelected] = useState("");
+  console.log(data);
+
+  const handleDeleteSurat = async () => {
+    setActionLoading(true);
+    try {
+      await deleteDoc(doc(db, "suratKeluar", data.uid));
+      setActionLoading(false);
+      close();
+    } catch (error) {
+      console.error("Error deleting document:", error);
+      setActionLoading(false);
+    }
+  };
+
+  return (
+    <Modal.Root opened={show} onClose={close} centered>
+      <Modal.Overlay />
+      <Modal.Content>
+        <Modal.Header
+          style={{
+            background: "#2B6777",
+            justifyContent: "center",
+          }}
+        >
+          <Modal.Title
+            style={{
+              color: "white",
+              textAlign: "center",
+              fontSize: "32px",
+              fontWeight: "700",
+            }}
+          >
+            Update Status
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="m-2 flex flex-col gap-4">
+            <h1>Hapus ID : {data.uid}</h1>
+            <div className="flex justify-evenly">
+              <button
+                onClick={close}
+                className="rounded-lg bg-gray-600 px-6 py-2 text-white"
+              >
+                Batal
+              </button>
+              <button
+                onClick={handleDeleteSurat}
+                className="rounded-lg bg-primary px-6 py-2 text-white"
+              >
+                Hapus
+              </button>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal.Content>
+    </Modal.Root>
   );
 };
 

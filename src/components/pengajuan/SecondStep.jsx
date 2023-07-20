@@ -82,6 +82,14 @@ const SecondStep = ({ handler, form }) => {
       });
   };
 
+  const getStatus = (jenis) => {
+    console.log(jenis);
+    const found = dropdownData(form.values.jenisSurat).find(
+      (i) => i.value === jenis
+    );
+    return found.label;
+  };
+
   const handleSubmit = async () => {
     let urlSuratPengantar = "",
       urlScanKK = "",
@@ -103,6 +111,7 @@ const SecondStep = ({ handler, form }) => {
     // const { id, ...rest } = form.values;
     setDoc(doc(db, "pengajuan", form.values.id), {
       ...form.values,
+      namaOpsiSurat: getStatus(form.values.opsiSurat),
       suratPengantar: urlSuratPengantar,
       scanKK: urlScanKK,
       docTambahan: urlDocTambahan,
@@ -189,7 +198,7 @@ const SecondStep = ({ handler, form }) => {
           <div className="flex flex-[3] gap-2">
             <FileButton
               onChange={(value) => form.setFieldValue("suratPengantar", value)}
-              accept="image/png,image/jpeg"
+              accept="image/png,image/jpeg,application/pdf"
             >
               {(props) => (
                 <Button
@@ -214,7 +223,7 @@ const SecondStep = ({ handler, form }) => {
           <div className="flex flex-[3] gap-2">
             <FileButton
               onChange={(value) => form.setFieldValue("scanKK", value)}
-              accept="image/png,image/jpeg"
+              accept="image/png,image/jpeg,application/pdf"
             >
               {(props) => (
                 <Button
@@ -232,12 +241,12 @@ const SecondStep = ({ handler, form }) => {
         </div>
         <div className="flex gap-2">
           <label className="flex-1 text-2xl font-bold text-primary">
-            Dok Tambahan <span className="text-red-500">*</span>
+            Dok Tambahan <span className="text-red-500"></span>
           </label>
           <div className="flex flex-[3] gap-2">
             <FileButton
               onChange={(value) => form.setFieldValue("docTambahan", value)}
-              accept="image/png,image/jpeg"
+              accept="image/png,image/jpeg,application/pdf"
             >
               {(props) => (
                 <Button

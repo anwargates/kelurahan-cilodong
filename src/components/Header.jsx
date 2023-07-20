@@ -58,7 +58,7 @@ export const Header = () => {
       where(
         "receiver",
         "==",
-        isLoggedIn && !isAdmin ? auth.currentUser?.uid : "admin"
+        !isAdmin && isLoggedIn ? auth.currentUser?.uid : "admin"
       )
     );
 

@@ -1,30 +1,18 @@
-import React, { useEffect, useState } from "react";
-import Pengajuan from "../../assets/icons/pengajuan.svg";
-import {
-  Anchor,
-  Breadcrumbs,
-  Group,
-  Modal,
-  NativeSelect,
-  Pagination,
-  Progress,
-  Select,
-} from "@mantine/core";
+import { Anchor, Breadcrumbs } from "@mantine/core";
+import { usePagination } from "@mantine/hooks";
+import { Space, Table } from "antd";
 import {
   collection,
   getCountFromServer,
   getDocs,
   limit,
-  orderBy,
   query,
   startAfter,
   where,
 } from "firebase/firestore";
-import { auth, db } from "../../config/firebase";
-import { usePagination } from "@mantine/hooks";
-import { useStore } from "../../global/store";
+import React, { useEffect, useState } from "react";
 import { BiEdit, BiTrash } from "react-icons/bi";
-import { Space, Table } from "antd";
+import { auth, db } from "../../config/firebase";
 
 const items = [
   { title: "Home", href: "/admin" },
@@ -53,7 +41,7 @@ const AdminArsipPenduduk = () => {
   const pengajuanQuery = query(
     pengajuanRef,
     // orderBy("timestamp", "desc"),
-    limit(itemsPerPage)
+    where("isAdmin", "==", false)
   );
 
   // Calculate the total number of pages

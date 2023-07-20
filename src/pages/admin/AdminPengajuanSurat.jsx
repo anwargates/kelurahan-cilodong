@@ -1,36 +1,29 @@
-import React, { useEffect, useState } from "react";
-import Pengajuan from "../../assets/icons/pengajuan.svg";
 import {
   Anchor,
   Breadcrumbs,
-  Group,
   Image,
   Modal,
   NativeSelect,
-  Pagination,
   Progress,
-  Select,
 } from "@mantine/core";
+import { Space, Table } from "antd";
 import {
   addDoc,
   collection,
   doc,
   getCountFromServer,
   getDocs,
-  limit,
   orderBy,
   query,
   serverTimestamp,
   setDoc,
-  startAfter,
   updateDoc,
   where,
 } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+import Pengajuan from "../../assets/icons/pengajuan.svg";
 import { auth, db } from "../../config/firebase";
-import { usePagination } from "@mantine/hooks";
 import { useStore } from "../../global/store";
-import { Space, Table } from "antd";
-import moment from "moment/moment";
 
 const items = [
   { title: "Home", href: "#" },
@@ -80,10 +73,15 @@ const AdminPengajuanSurat = () => {
       dataIndex: "nik",
       key: "nik",
     },
+    // {
+    //   title: "Jenis Surat",
+    //   dataIndex: "jenisSurat",
+    //   key: "jenisSurat",
+    // },
     {
       title: "Jenis Surat",
-      dataIndex: "jenisSurat",
-      key: "jenisSurat",
+      dataIndex: "namaOpsiSurat",
+      key: "namaOpsiSurat",
     },
     {
       title: "Tanggal",
@@ -109,6 +107,11 @@ const AdminPengajuanSurat = () => {
       key: "action",
       fixed: "right",
       width: 140,
+      onCell: () => ({
+        onClick: (event) => {
+          event.stopPropagation();
+        },
+      }),
       render: (_, record) => (
         <Space size="middle">
           <button
@@ -179,7 +182,7 @@ const AdminPengajuanSurat = () => {
 
   const handleModal = (data) => {
     setSelectedData(data);
-    setShowModal(!showModal);
+    setShowModal(true);
   };
   const handleCloseModal = () => {
     setShowModal(false);
@@ -188,6 +191,7 @@ const AdminPengajuanSurat = () => {
 
   const handleCloseModalLihatBukti = () => {
     setShowModalBukti(false);
+    fetchData();
   };
 
   const handleChangeSurat = (category) => {
@@ -442,47 +446,161 @@ const ModalUpdateStatus = ({ show, close, data }) => {
 const ModalViewBukti = ({ show, close, data }) => {
   const { actionLoading, setActionLoading } = useStore();
   const [selected, setSelected] = useState("");
+  const [showImage, setShowImage] = useState(false);
+  const [image, setImage] = useState("");
+  const timestamp = new Date(data.timestamp?.seconds * 1000);
   console.log(data);
 
+  const handleModalImage = (url) => {
+    setShowImage(true);
+    setImage(url);
+  };
+
+  const handleCloseImage = (url) => {
+    setShowImage(false);
+    setImage("");
+  };
+
   return (
-    <Modal.Root opened={show} onClose={close} centered>
-      <Modal.Overlay />
-      <Modal.Content>
-        <Modal.Header
-          style={{
-            background: "#2B6777",
-            justifyContent: "center",
-          }}
-        >
-          <Modal.Title
+    <>
+      <Modal.Root size="auto" opened={show} onClose={close} centered>
+        <Modal.Overlay />
+        <Modal.Content>
+          <Modal.Header
             style={{
-              color: "white",
-              textAlign: "center",
-              fontSize: "32px",
-              fontWeight: "700",
+              background: "#2B6777",
+              justifyContent: "center",
             }}
           >
-            Update Status
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className="m-2 flex flex-col gap-4">
-            <h1>Bukti-bukti</h1>
-            <Image src={data.scanKK} />
-            <Image src={data.suratPengantar} />
-            <Image src={data.docTambahan} />
-            <div className="flex justify-evenly">
-              <button
-                onClick={close}
-                className="rounded-lg bg-gray-600 px-6 py-2 text-white"
-              >
-                Batal
-              </button>
-            </div>
-          </div>
-        </Modal.Body>
-      </Modal.Content>
-    </Modal.Root>
+            <Modal.Title
+              style={{
+                color: "white",
+                textAlign: "center",
+                fontSize: "32px",
+                fontWeight: "700",
+              }}
+            >
+              Detail Pengajuan
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <table>
+              <tbody>
+                <tr>
+                  <td className="font-bold">ID Surat</td>
+                  <td>:</td>
+                  <td>{data.uid}</td>
+                </tr>
+                <tr>
+                  <td className="font-bold">Alamat</td>
+                  <td>:</td>
+                  <td>{data.alamat}</td>
+                </tr>
+                <tr>
+                  <td className="font-bold">Opsi Surat</td>
+                  <td>:</td>
+                  <td>{data.namaOpsiSurat}</td>
+                </tr>
+                <tr>
+                  <td className="font-bold">Timestamp</td>
+                  <td>:</td>
+                  <td>{timestamp.toDateString()}</td>
+                </tr>
+                <tr>
+                  <td className="font-bold">HP</td>
+                  <td>:</td>
+                  <td>{data.hp}</td>
+                </tr>
+                <tr>
+                  <td className="font-bold">ID Status</td>
+                  <td>:</td>
+                  <td>{data.idStatus}</td>
+                </tr>
+                <tr>
+                  <td className="font-bold">Jenis Surat</td>
+                  <td>:</td>
+                  <td>{data.jenisSurat}</td>
+                </tr>
+                {/* <tr>
+                  <td className="font-bold">ID</td>
+                  <td>:</td>
+                  <td>{data.id}</td>
+                </tr> */}
+                <tr>
+                  <td className="font-bold">UserID</td>
+                  <td>:</td>
+                  <td>{data.userID}</td>
+                </tr>
+                <tr>
+                  <td className="font-bold">Nama</td>
+                  <td>:</td>
+                  <td>{data.nama}</td>
+                </tr>
+                <tr>
+                  <td className="font-bold">NIK</td>
+                  <td>:</td>
+                  <td>{data.nik}</td>
+                </tr>
+                <tr>
+                  <td className="font-bold">Status Pengajuan</td>
+                  <td>:</td>
+                  <td>{data.statusPengajuan}</td>
+                </tr>
+                <tr>
+                  <td className="font-bold">Doc Tambahan</td>
+                  <td>:</td>
+                  <td>
+                    <a
+                      className="hover:cursor-pointer"
+                      onClick={() => handleModalImage(data.docTambahan)}
+                    >
+                      Lihat
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="font-bold">Surat Pengantar</td>
+                  <td>:</td>
+                  <td>
+                    <a
+                      className="hover:cursor-pointer"
+                      onClick={() => handleModalImage(data.suratPengantar)}
+                    >
+                      Lihat
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="font-bold">Scan KK</td>
+                  <td>:</td>
+                  <td>
+                    <a
+                      className="hover:cursor-pointer"
+                      onClick={() => handleModalImage(data.scanKK)}
+                    >
+                      Lihat
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </Modal.Body>
+        </Modal.Content>
+      </Modal.Root>
+      <Modal.Root
+        size="100%"
+        opened={showImage}
+        onClose={handleCloseImage}
+        centered
+      >
+        <Modal.Overlay />
+        <Modal.Content>
+          <Modal.Body>
+            <Image src={image} />
+          </Modal.Body>
+        </Modal.Content>
+      </Modal.Root>
+    </>
   );
 };
 
