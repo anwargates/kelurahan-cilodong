@@ -272,6 +272,19 @@ export const Header = () => {
                       </li>
                     )
                   ) : null}
+                  {isLoggedIn ? (
+                    <li
+                      onClick={handleLogout}
+                      className="flex items-center gap-4"
+                    >
+                      Logout
+                    </li>
+                  ) : (
+                    // if not signed in the show login button
+                    <li className="flex items-center gap-4">
+                      <Link to="/login">Log In</Link>
+                    </li>
+                  )}
                 </ul>
               </div>
             </Drawer>
