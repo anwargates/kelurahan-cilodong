@@ -128,8 +128,9 @@ const LacakSurat = () => {
         <h1 className="my-8 text-center text-5xl font-bold text-primary">
           Data Table Pengajuan Surat
         </h1>
-        <div className="m-auto my-8 w-[1024px] rounded-lg bg-[#C8D8E4] p-4">
+        <div className="m-auto my-8 w-full rounded-lg bg-[#C8D8E4] p-4">
           <Table
+            scroll={{ x: "100vw" }}
             loading={actionLoading}
             pagination={{
               position: ["bottomLeft"],
