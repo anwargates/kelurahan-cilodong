@@ -61,7 +61,10 @@ const AdminSidebar = () => {
         <div className="text-primary">
           <h3 className="my-4 text-lg font-semibold">Kelola Akun</h3>
           <ul className="flex flex-col gap-6 text-sm font-bold">
-            <li className="flex items-center justify-start gap-2 hover:cursor-pointer">
+            <li
+              onClick={() => navigate("/admin/akun-admin")}
+              className="flex items-center justify-start gap-2 hover:cursor-pointer"
+            >
               <img src={AkunAdmin} alt="" />
               <span>Akun Admin</span>
             </li>

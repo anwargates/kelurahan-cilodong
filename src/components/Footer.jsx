@@ -9,7 +9,7 @@ export const Footer = () => {
   return (
     <footer className="w-full">
       <div className=" flex flex-col bg-third">
-        <div className="default-container h-fullpx-20 grid grid-cols-2 gap-8 p-14 text-left text-white">
+        <div className="default-container grid h-full gap-8 p-8 text-left text-white sm:grid-cols-2 sm:px-20">
           <div className="flex flex-col gap-11">
             <img src={Logo} alt="logo" className="w-96" />
             <ul className="flex flex-col gap-4 text-xl font-normal">

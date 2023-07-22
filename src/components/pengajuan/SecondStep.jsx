@@ -151,7 +151,7 @@ const SecondStep = ({ handler, form }) => {
       {/* <h1>{Content(selectedValue)}</h1> */}
       {/* {dynamicComponent} */}
       <form className="my-4 flex flex-col gap-4" action="">
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row">
           <label className="flex-1 text-2xl font-bold text-primary">
             Nama <span className="text-red-500">*</span>
           </label>
@@ -161,7 +161,7 @@ const SecondStep = ({ handler, form }) => {
             {...form.getInputProps("nama")}
           />
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row">
           <label className="flex-1 text-2xl font-bold text-primary">
             NIK <span className="text-red-500">*</span>
           </label>
@@ -171,7 +171,7 @@ const SecondStep = ({ handler, form }) => {
             {...form.getInputProps("nik")}
           />
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row">
           <label className="flex-1 text-2xl font-bold text-primary">
             No. HP <span className="text-red-500">*</span>
           </label>
@@ -181,7 +181,7 @@ const SecondStep = ({ handler, form }) => {
             {...form.getInputProps("hp")}
           />
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row">
           <label className="flex-1 text-2xl font-bold text-primary">
             Alamat <span className="text-red-500">*</span>
           </label>
@@ -191,7 +191,7 @@ const SecondStep = ({ handler, form }) => {
             {...form.getInputProps("alamat")}
           />
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row">
           <label className="flex-1 text-2xl font-bold text-primary">
             Surat Pengantar <span className="text-red-500">*</span>
           </label>
@@ -216,7 +216,7 @@ const SecondStep = ({ handler, form }) => {
             </Text>
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row">
           <label className="flex-1 text-2xl font-bold text-primary">
             Scan KK <span className="text-red-500">*</span>
           </label>
@@ -239,7 +239,7 @@ const SecondStep = ({ handler, form }) => {
             </Text>
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row">
           <label className="flex-1 text-2xl font-bold text-primary">
             Dok Tambahan <span className="text-red-500"></span>
           </label>
@@ -269,7 +269,7 @@ const SecondStep = ({ handler, form }) => {
       >
         Selanjutnya
       </button>
-      <div className="my-2 flex gap-2">
+      <div className="my-2 flex flex-col gap-2 sm:flex-row">
         <div>Note : </div>
         <ul className="list-inside">
           <li>- Form dengan tanda wajib diisi</li>

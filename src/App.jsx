@@ -17,6 +17,7 @@ import AdminPengajuanSurat from "./pages/admin/AdminPengajuanSurat";
 import AdminSuratKeluar from "./pages/admin/AdminSuratKeluar";
 import AdminArsipPenduduk from "./pages/admin/AdminArsipPenduduk";
 import LacakSuratDetail from "./pages/LacakSuratDetail";
+import AdminAkunBaru from "./pages/admin/AdminAkunBaru";
 
 function App() {
   const {
@@ -123,6 +124,7 @@ function App() {
               path="/admin/arsip-penduduk"
               element={<AdminArsipPenduduk />}
             />
+            <Route path="/admin/akun-admin" element={<AdminAkunBaru />} />
           </Route>
         </Route>
         {/* <Route element={<AdminCheck />}>

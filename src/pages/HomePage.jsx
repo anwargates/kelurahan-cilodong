@@ -6,9 +6,9 @@ export const HomePage = () => {
   return (
     <div className="">
       <section className="bg-primary">
-        <div className="default-container grid h-[90vh] grid-flow-col gap-28 px-4 py-44 xl:px-48">
+        <div className="default-container grid min-h-[90vh] gap-28 px-4 py-44 md:grid-flow-col xl:px-48">
           <div className="flex items-center justify-center">
-            <img className="rounded-full" src={Hero} alt="" />
+            <img className="max-w-full rounded-full" src={Hero} alt="" />
           </div>
           <div className="flex flex-col justify-center gap-1 text-white">
             <h1 className="text-5xl font-bold">Kelurahan Cilodong</h1>
@@ -40,14 +40,14 @@ export const HomePage = () => {
             mempunyai wilayah kerja meliputi :
           </p>
 
-          <ul className="ml-8 list-none">
+          <ul className="ml-8 list-disc">
             <li>43 (empat puluh tiga) Rukun Tetangga (RT)</li>
             <li>8 (delapan) Rukun Warga (RW)</li>
           </ul>
 
           <p>3 (tiga) Rukun warga diantaranya:</p>
 
-          <ul className="ml-8 list-none">
+          <ul className="ml-8 list-disc">
             <li>RW 003 (terdapat 5 RT)</li>
             <li>RW 004 (terdapat 4 RT)</li>
             <li>
