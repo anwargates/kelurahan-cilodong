@@ -105,7 +105,7 @@ const AdminPengajuanSurat = () => {
     {
       title: "Actions",
       key: "action",
-      fixed: "right",
+      // fixed: "right",
       width: 140,
       onCell: () => ({
         onClick: (event) => {
@@ -211,7 +211,7 @@ const AdminPengajuanSurat = () => {
     <div>
       <h1 className="text-xl font-bold text-primary">Dashboard</h1>
       <Breadcrumbs>{items}</Breadcrumbs>
-      <div className="mx-auto my-4 grid max-w-fit grid-cols-3 gap-4 py-4">
+      <div className="mx-auto my-4 grid max-w-fit gap-4 py-4 lg:grid-cols-3">
         <div
           onClick={() => handleChangeSurat("KTP")}
           className="flex h-[133px] w-[249px] flex-col justify-between bg-white p-4 text-primary shadow-lg hover:cursor-pointer"

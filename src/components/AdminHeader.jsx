@@ -1,4 +1,12 @@
-import { Avatar, Burger, Button, Header, Loader, Menu } from "@mantine/core";
+import {
+  Avatar,
+  Burger,
+  Button,
+  Header,
+  Loader,
+  MediaQuery,
+  Menu,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import React, { useEffect, useState } from "react";
@@ -11,7 +19,7 @@ import { FiLogOut } from "react-icons/fi";
 import { auth } from "../config/firebase";
 
 // HEADER NAVBAR COMPONENT
-export const AdminHeader = () => {
+export const AdminHeader = ({ opened, handleOpen }) => {
   // const [nav, setNav] = useState(false)
   const [nav, { toggle }] = useDisclosure(false);
   const navigate = useNavigate();
@@ -52,11 +60,19 @@ export const AdminHeader = () => {
 
   return (
     <Header height={"10vh"} withBorder={false}>
-      <div className="flex items-center justify-start gap-8 p-6 sm:py-6">
+      <div className="flex items-center justify-between gap-8 p-6 sm:py-6">
         {/* LOGO */}
         <Link to="/">
           <img src={LogoCilodong} alt="orcalogo" className="h-[6vh] w-auto" />
         </Link>
+        <MediaQuery largerThan="sm" styles={{ display: "none" }}>
+          <Burger
+            opened={opened}
+            onClick={() => handleOpen()}
+            size="sm"
+            color="black"
+          />
+        </MediaQuery>
       </div>
     </Header>
   );

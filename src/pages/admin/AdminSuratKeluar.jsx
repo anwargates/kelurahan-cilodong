@@ -123,6 +123,7 @@ const AdminSuratKeluar = () => {
       <div className="">
         <div className="m-auto my-8 rounded-lg bg-[#C8D8E4] p-4">
           <Table
+            scroll={{ x: "100vw" }}
             loading={actionLoading}
             pagination={{
               position: ["bottomLeft"],

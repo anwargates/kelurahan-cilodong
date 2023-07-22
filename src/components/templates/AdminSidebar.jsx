@@ -8,7 +8,7 @@ import SuratKeluar from "../../assets/icons/surat_keluar.svg";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const AdminSidebar = () => {
+const AdminSidebar = ({ opened }) => {
   const navigate = useNavigate();
 
   return (
@@ -17,8 +17,10 @@ const AdminSidebar = () => {
       withBorder={false}
       bg={"#FFFFFF"}
       p="md"
-      width={{ base: 250 }}
+      width={{ base: 250, sm: 200, lg: 300 }}
       zIndex={1}
+      hiddenBreakpoint="sm"
+      hidden={!opened}
     >
       <Navbar.Section>
         <div
