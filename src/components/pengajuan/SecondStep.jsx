@@ -25,17 +25,22 @@ const dropdownData = (jenis) => {
   switch (jenis) {
     case "KTP":
       return [
+        { label: "Pilih...", value: "1" },
         { label: "Kartu Tanda Pengenal (KTP) - Baru", value: "KTP1" },
         { label: "Kartu Tanda Pengenal (KTP) - Hilang", value: "KTP2" },
         { label: "Kartu Tanda Pengenal (KTP) - Rusak", value: "KTP3" },
       ];
     case "KK":
       return [
+        { label: "Pilih...", value: "1" },
         { label: "Kartu Keluarga (KK) - Baru", value: "KK1" },
         { label: "Kartu Keluarga (KK) - Pindah", value: "KK2" },
       ];
     case "NA":
-      return [{ label: "Nikah (N.A)", value: "NA" }];
+      return [
+        { label: "Pilih...", value: "1" },
+        { label: "Nikah (N.A)", value: "NA" },
+      ];
     default:
       return;
   }
@@ -87,6 +92,7 @@ const SecondStep = ({ handler, form }) => {
     const found = dropdownData(form.values.jenisSurat).find(
       (i) => i.value === jenis
     );
+    console.log(found);
     return found.label;
   };
 
@@ -138,12 +144,14 @@ const SecondStep = ({ handler, form }) => {
 
   return (
     <>
+      {console.log(form.values)}
       <LoadingOverlay
         loader={<Loader size={80} />}
         visible={pending}
         overlayBlur={2}
       />
       <NativeSelect
+        defaultChecked={false}
         value={form.values.opsiSurat}
         onChange={handleDropdownChange}
         data={dropdownData(form.values.jenisSurat)}

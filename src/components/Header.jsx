@@ -66,7 +66,7 @@ export const Header = () => {
       where(
         "receiver",
         "==",
-        !isAdmin && isLoggedIn ? auth.currentUser?.uid : "admin"
+        isLoggedIn && !isAdmin ? auth.currentUser?.uid : "admin"
       )
     );
 
@@ -82,7 +82,7 @@ export const Header = () => {
     return () => {
       isLoggedIn ? unsubscribe() : null;
     };
-  }, []);
+  }, [isAdmin]);
 
   // const handleNav = () => {
   //   setNav(!nav)
@@ -109,6 +109,7 @@ export const Header = () => {
     signOut(auth)
       .then(setLoggedIn(false))
       .then(() => navigate("/"));
+    close();
   };
 
   return (
@@ -246,7 +247,11 @@ export const Header = () => {
               <div className="font-bold">
                 <ul className="flex flex-col items-end justify-between gap-8">
                   <li className="header-link-button">
-                    <Link className="hover:text-gray-200" to="/">
+                    <Link
+                      onClick={close}
+                      className="hover:text-gray-200"
+                      to="/"
+                    >
                       Beranda
                     </Link>
                   </li>
@@ -254,19 +259,31 @@ export const Header = () => {
                     !isAdmin ? (
                       <>
                         <li className="header-link-button">
-                          <Link className="hover:text-gray-200" to="/pengajuan">
+                          <Link
+                            onClick={close}
+                            className="hover:text-gray-200"
+                            to="/pengajuan"
+                          >
                             Pengajuan Surat
                           </Link>
                         </li>
                         <li className="header-link-button">
-                          <Link className="hover:text-gray-200" to="/lacak">
+                          <Link
+                            onClick={close}
+                            className="hover:text-gray-200"
+                            to="/lacak"
+                          >
                             Lacak Surat
                           </Link>
                         </li>
                       </>
                     ) : (
                       <li className="header-link-button">
-                        <Link className="hover:text-gray-200" to="/admin">
+                        <Link
+                          onClick={close}
+                          className="hover:text-gray-200"
+                          to="/admin"
+                        >
                           Admin Dashboard
                         </Link>
                       </li>

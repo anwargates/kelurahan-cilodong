@@ -44,63 +44,74 @@ const LacakSuratDetail = () => {
           Lacak Surat
         </h1>
         <h2 className="text-center">Detail Data:</h2>
-        <div className="m-auto w-[640px] rounded-2xl bg-[#C8D8E4] p-6">
+        <div className="m-auto max-w-[640px] rounded-2xl bg-[#C8D8E4] p-6 sm:px-20">
           <table className="w-full">
             <tbody>
-              <tr className="text-2xl text-gray-600">
+              <tr className="flex flex-col text-2xl text-gray-600 sm:table-row">
                 <td>ID Surat</td>
-                <td>:</td>
+                <td className="hidden sm:block">:</td>
                 <td className="font-bold">{item.id}</td>
               </tr>
-              <tr className="text-2xl text-gray-600">
+              <tr className=" flex flex-col text-2xl text-gray-600 sm:table-row">
                 <td>Nama</td>
-                <td>:</td>
+                <td className="hidden sm:block">:</td>
                 <td className="font-bold">{item.nama}</td>
               </tr>
-              <tr className="text-2xl text-gray-600">
+              <tr className=" flex flex-col text-2xl text-gray-600 sm:table-row">
                 <td>NIK</td>
-                <td>:</td>
+                <td className="hidden sm:block">:</td>
                 <td className="font-bold">{item.nik}</td>
               </tr>
-              <tr className="text-2xl text-gray-600">
+              <tr className=" flex flex-col text-2xl text-gray-600 sm:table-row">
                 <td>No. HP</td>
-                <td>:</td>
+                <td className="hidden sm:block">:</td>
                 <td className="font-bold">{item.hp}</td>
               </tr>
-              <tr className="text-2xl text-gray-600">
+              <tr className=" flex flex-col text-2xl text-gray-600 sm:table-row">
                 <td>Jenis Surat</td>
-                <td>:</td>
+                <td className="hidden sm:block">:</td>
                 <td className="font-bold">{item.jenisSurat}</td>
               </tr>
             </tbody>
           </table>
         </div>
-        <div className="m-auto mb-24 mt-10 min-w-[800px] max-w-7xl">
+        <div className="m-auto mb-24 mt-10 px-2 md:w-[700px]">
           <Stepper
             active={item.idStatus}
             color="#2B6777"
+            breakpoint="sm"
             styles={{
               root: {
-                position: "relative",
+                "@media (min-width: 48em)": {
+                  position: "relative",
+                },
               },
               stepBody: {
-                width: 100,
-                position: "absolute",
-                top: 50,
+                "@media (min-width: 48em)": {
+                  width: 100,
+                  position: "absolute",
+                  top: 50,
+                },
               },
               step: {
-                padding: 0,
-                display: "flex",
-                flexDirection: "column",
+                "@media (min-width: 48em)": {
+                  padding: 0,
+                  display: "flex",
+                  flexDirection: "column",
+                },
               },
               stepIcon: {
-                borderWidth: rem(4),
-                borderColor: "white",
+                "@media (min-width: 48em)": {
+                  borderWidth: rem(4),
+                  borderColor: "white",
+                },
               },
               separator: {
-                marginLeft: rem(-3),
-                marginRight: rem(-3),
-                height: rem(20),
+                "@media (min-width: 48em)": {
+                  marginLeft: rem(-3),
+                  marginRight: rem(-3),
+                  height: rem(20),
+                },
               },
             }}
           >
