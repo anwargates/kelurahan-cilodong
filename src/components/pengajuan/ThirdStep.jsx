@@ -7,7 +7,7 @@ const ThirdStep = ({ handler, form }) => {
       <h1 className="text-2xl font-bold">
         Selamat : Anda Berhasil Mengajukan Surat. Berikut ID Surat Anda
       </h1>
-      <h2 className="text-4xl font-bold">{form.values.id}</h2>
+      <h2 className="text-xl font-bold md:text-4xl">{form.values.id}</h2>
       <span>
         * setelah anda menekan tombol selesai, anda akan dialihkan ke beranda
         portal website cilodong. Dimohon untuk melakukan pengecekan secara

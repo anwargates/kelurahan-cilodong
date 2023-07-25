@@ -484,106 +484,108 @@ const ModalViewBukti = ({ show, close, data }) => {
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <table>
-              <tbody>
-                <tr>
-                  <td className="font-bold">ID Surat</td>
-                  <td>:</td>
-                  <td>{data.uid}</td>
-                </tr>
-                <tr>
-                  <td className="font-bold">Alamat</td>
-                  <td>:</td>
-                  <td>{data.alamat}</td>
-                </tr>
-                <tr>
-                  <td className="font-bold">Opsi Surat</td>
-                  <td>:</td>
-                  <td>{data.namaOpsiSurat}</td>
-                </tr>
-                <tr>
-                  <td className="font-bold">Timestamp</td>
-                  <td>:</td>
-                  <td>{timestamp.toDateString()}</td>
-                </tr>
-                <tr>
-                  <td className="font-bold">HP</td>
-                  <td>:</td>
-                  <td>{data.hp}</td>
-                </tr>
-                <tr>
-                  <td className="font-bold">ID Status</td>
-                  <td>:</td>
-                  <td>{data.idStatus}</td>
-                </tr>
-                <tr>
-                  <td className="font-bold">Jenis Surat</td>
-                  <td>:</td>
-                  <td>{data.jenisSurat}</td>
-                </tr>
-                {/* <tr>
-                  <td className="font-bold">ID</td>
-                  <td>:</td>
-                  <td>{data.id}</td>
-                </tr> */}
-                <tr>
-                  <td className="font-bold">UserID</td>
-                  <td>:</td>
-                  <td>{data.userID}</td>
-                </tr>
-                <tr>
-                  <td className="font-bold">Nama</td>
-                  <td>:</td>
-                  <td>{data.nama}</td>
-                </tr>
-                <tr>
-                  <td className="font-bold">NIK</td>
-                  <td>:</td>
-                  <td>{data.nik}</td>
-                </tr>
-                <tr>
-                  <td className="font-bold">Status Pengajuan</td>
-                  <td>:</td>
-                  <td>{data.statusPengajuan}</td>
-                </tr>
-                <tr>
-                  <td className="font-bold">Doc Tambahan</td>
-                  <td>:</td>
-                  <td>
-                    <a
-                      className="hover:cursor-pointer"
-                      onClick={() => handleModalImage(data.docTambahan)}
-                    >
-                      Lihat
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="font-bold">Surat Pengantar</td>
-                  <td>:</td>
-                  <td>
-                    <a
-                      className="hover:cursor-pointer"
-                      onClick={() => handleModalImage(data.suratPengantar)}
-                    >
-                      Lihat
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="font-bold">Scan KK</td>
-                  <td>:</td>
-                  <td>
-                    <a
-                      className="hover:cursor-pointer"
-                      onClick={() => handleModalImage(data.scanKK)}
-                    >
-                      Lihat
-                    </a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <div className="overflow-scroll py-4">
+              <table>
+                <tbody>
+                  <tr>
+                    <td className="font-bold">ID Surat</td>
+                    <td>:</td>
+                    <td>{data.uid}</td>
+                  </tr>
+                  <tr>
+                    <td className="font-bold">Alamat</td>
+                    <td>:</td>
+                    <td>{data.alamat}</td>
+                  </tr>
+                  <tr>
+                    <td className="font-bold">Opsi Surat</td>
+                    <td>:</td>
+                    <td>{data.namaOpsiSurat}</td>
+                  </tr>
+                  <tr>
+                    <td className="font-bold">Timestamp</td>
+                    <td>:</td>
+                    <td>{timestamp.toDateString()}</td>
+                  </tr>
+                  <tr>
+                    <td className="font-bold">HP</td>
+                    <td>:</td>
+                    <td>{data.hp}</td>
+                  </tr>
+                  <tr>
+                    <td className="font-bold">ID Status</td>
+                    <td>:</td>
+                    <td>{data.idStatus}</td>
+                  </tr>
+                  <tr>
+                    <td className="font-bold">Jenis Surat</td>
+                    <td>:</td>
+                    <td>{data.jenisSurat}</td>
+                  </tr>
+                  {/* <tr>
+                    <td className="font-bold">ID</td>
+                    <td>:</td>
+                    <td>{data.id}</td>
+                  </tr> */}
+                  <tr>
+                    <td className="font-bold">UserID</td>
+                    <td>:</td>
+                    <td>{data.userID}</td>
+                  </tr>
+                  <tr>
+                    <td className="font-bold">Nama</td>
+                    <td>:</td>
+                    <td>{data.nama}</td>
+                  </tr>
+                  <tr>
+                    <td className="font-bold">NIK</td>
+                    <td>:</td>
+                    <td>{data.nik}</td>
+                  </tr>
+                  <tr>
+                    <td className="font-bold">Status Pengajuan</td>
+                    <td>:</td>
+                    <td>{data.statusPengajuan}</td>
+                  </tr>
+                  <tr>
+                    <td className="font-bold">Doc Tambahan</td>
+                    <td>:</td>
+                    <td>
+                      <a
+                        className="hover:cursor-pointer"
+                        onClick={() => handleModalImage(data.docTambahan)}
+                      >
+                        Lihat
+                      </a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="font-bold">Surat Pengantar</td>
+                    <td>:</td>
+                    <td>
+                      <a
+                        className="hover:cursor-pointer"
+                        onClick={() => handleModalImage(data.suratPengantar)}
+                      >
+                        Lihat
+                      </a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="font-bold">Scan KK</td>
+                    <td>:</td>
+                    <td>
+                      <a
+                        className="hover:cursor-pointer"
+                        onClick={() => handleModalImage(data.scanKK)}
+                      >
+                        Lihat
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </Modal.Body>
         </Modal.Content>
       </Modal.Root>

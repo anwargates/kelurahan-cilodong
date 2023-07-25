@@ -34,7 +34,8 @@ const dropdownData = (jenis) => {
       return [
         { label: "Pilih...", value: "1" },
         { label: "Kartu Keluarga (KK) - Baru", value: "KK1" },
-        { label: "Kartu Keluarga (KK) - Pindah", value: "KK2" },
+        { label: "Kartu Keluarga (KK) - Rusak", value: "KK2" },
+        { label: "Kartu Keluarga (KK) - Hilang", value: "KK3" },
       ];
     case "NA":
       return [

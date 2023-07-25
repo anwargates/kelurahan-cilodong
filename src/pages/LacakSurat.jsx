@@ -48,8 +48,8 @@ const LacakSurat = () => {
     },
     {
       title: "Jenis Surat",
-      dataIndex: "jenisSurat",
-      key: "jenisSurat",
+      dataIndex: "namaOpsiSurat",
+      key: "namaOpsiSurat",
     },
     {
       title: "Tanggal",
@@ -95,18 +95,6 @@ const LacakSurat = () => {
     fetchData();
   }, []);
 
-  const rows = pengajuanData.map((element, index) => {
-    const timestamp = new Date(element.timestamp.seconds * 1000);
-    return (
-      <tr key={element.uid}>
-        <td className="p-2">{index + 1}</td>
-        <td className="p-2">{element.nama}</td>
-        <td className="p-2">{element.jenisSurat}</td>
-        <td className="p-2">{timestamp.toDateString()}</td>
-      </tr>
-    );
-  });
-
   const rowProps = (record) => {
     return {
       onClick: () => {
@@ -115,11 +103,9 @@ const LacakSurat = () => {
     };
   };
 
-  const tableRows = pengajuanData.length ? rows : null;
-
   return (
     <>
-      <div className="relative min-h-[800px] pt-4">
+      <div className="relative min-h-[800px] pt-4 md:px-10">
         <LoadingOverlay
           loader={<Loader size={80} />}
           visible={pending}

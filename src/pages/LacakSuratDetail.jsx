@@ -1,8 +1,9 @@
 import { Loader, LoadingOverlay, Stepper, rem } from "@mantine/core";
 import { doc, getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { db } from "../config/firebase";
+import { BsX } from "react-icons/bs";
 
 const LacakSuratDetail = () => {
   const { id } = useParams();
@@ -44,7 +45,7 @@ const LacakSuratDetail = () => {
           Lacak Surat
         </h1>
         <h2 className="text-center">Detail Data:</h2>
-        <div className="m-auto max-w-[640px] rounded-2xl bg-[#C8D8E4] p-6 sm:px-20">
+        <div className="m-auto max-w-[640px] rounded-2xl bg-[#C8D8E4] p-4 sm:px-20">
           <table className="w-full">
             <tbody>
               <tr className="flex flex-col text-2xl text-gray-600 sm:table-row">
@@ -70,14 +71,14 @@ const LacakSuratDetail = () => {
               <tr className=" flex flex-col text-2xl text-gray-600 sm:table-row">
                 <td>Jenis Surat</td>
                 <td className="hidden sm:block">:</td>
-                <td className="font-bold">{item.jenisSurat}</td>
+                <td className="font-bold">{item.namaOpsiSurat}</td>
               </tr>
             </tbody>
           </table>
         </div>
         <div className="m-auto mb-24 mt-10 px-2 md:w-[700px]">
           <Stepper
-            active={item.idStatus}
+            active={item.idStatus == 2 ? 1 : item.idStatus}
             color="#2B6777"
             breakpoint="sm"
             styles={{
@@ -115,7 +116,15 @@ const LacakSuratDetail = () => {
               },
             }}
           >
-            <Stepper.Step label="Pengajuan Surat Pending" />
+            <Stepper.Step
+              color={item.idStatus == 2 ? "red" : "#2B6777"}
+              label={
+                item.idStatus == 2
+                  ? "Pengajuan Surat Ditolak"
+                  : "Pengajuan Surat Pending"
+              }
+              completedIcon={item.idStatus == 2 ? <BsX size="2rem" /> : null}
+            />
             <Stepper.Step label="Dokumen Diterima" />
             <Stepper.Step label="Verifikasi Berkas / Persyaratan Dilanjutkan" />
             <Stepper.Step label="Sudah Diketik Dan Diparaf" />
@@ -123,10 +132,23 @@ const LacakSuratDetail = () => {
             <Stepper.Step label="Selesai / Dapat Diambil" />
           </Stepper>
         </div>
-        {item.IdStatus === "3" && item.opsiSurat === "KTP1" ? (
+        {item.idStatus === "3" && item.opsiSurat === "KTP1" ? (
           <h1 className="text-center">
             Pengajuan anda telah diterima, silakan ke kelurahan untuk melakukan
             foto dan melengkapi berkas lainnya
+          </h1>
+        ) : null}
+        {item.idStatus === "2" ? (
+          <h1 className="text-center">
+            Pengajuan surat anda ditolak, silakan klik di{" "}
+            <Link
+              to="/pengajuan"
+              state={{ ...item }}
+              className="text-green-400"
+            >
+              sini
+            </Link>{" "}
+            untuk memperbaiki.
           </h1>
         ) : null}
       </div>

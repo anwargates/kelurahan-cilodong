@@ -69,26 +69,26 @@ const AdminArsipPenduduk = () => {
       dataIndex: "hp",
       key: "hp",
     },
-    {
-      title: "Actions",
-      key: "action",
-      render: (_, record) => (
-        <Space size="middle">
-          <button
-            onClick={() => handleModal(record)}
-            className="mx-1 rounded-full bg-green-800 p-2 text-white"
-          >
-            <BiEdit />
-          </button>
-          <button
-            onClick={() => handleModal(record)}
-            className="mx-1 rounded-full bg-red-800 p-2 text-white"
-          >
-            <BiTrash />
-          </button>
-        </Space>
-      ),
-    },
+    // {
+    //   title: "Actions",
+    //   key: "action",
+    //   render: (_, record) => (
+    //     <Space size="middle">
+    //       <button
+    //         onClick={() => handleModal(record)}
+    //         className="mx-1 rounded-full bg-green-800 p-2 text-white"
+    //       >
+    //         <BiEdit />
+    //       </button>
+    //       <button
+    //         onClick={() => handleModal(record)}
+    //         className="mx-1 rounded-full bg-red-800 p-2 text-white"
+    //       >
+    //         <BiTrash />
+    //       </button>
+    //     </Space>
+    //   ),
+    // },
   ];
 
   const fetchData = async () => {

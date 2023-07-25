@@ -58,7 +58,7 @@ const KK = () => {
               anggota keluarga atau dokumen keimigrasian bagi orang asing.
             </li>
           </ul>
-          <li>
+          {/* <li>
             Perubahan KK karena pengurangan anggota keluarga baik yang meninggal
             atau pindah
           </li>
@@ -92,7 +92,7 @@ const KK = () => {
               Surat Keterangan Datang dari LN bagi WNI yang datang dari
               LN karena Pindah.
             </li>
-          </ul>
+          </ul> */}
         </ul>
       </div>
     </div>

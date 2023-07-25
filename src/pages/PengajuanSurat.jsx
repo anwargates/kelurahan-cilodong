@@ -5,6 +5,7 @@ import FirstStep from "../components/pengajuan/FirstStep";
 import SecondStep from "../components/pengajuan/SecondStep";
 import ThirdStep from "../components/pengajuan/ThirdStep";
 import { useStore } from "../global/store";
+import { useLocation } from "react-router-dom";
 
 const generateId = () => {
   const timestamp = Date.now().toString(); // Generate a unique timestamp
@@ -14,14 +15,15 @@ const generateId = () => {
 };
 
 const PengajuanSurat = () => {
-  const [active, setActive] = useState(0);
+  const { state } = useLocation();
   const { userData } = useStore();
+  const [active, setActive] = useState(state?.id ? 1 : 0);
 
   const form = useForm({
     initialValues: {
-      id: generateId(),
-      jenisSurat: "",
-      opsiSurat: "",
+      id: state?.id ?? generateId(),
+      jenisSurat: state?.jenisSurat ?? "",
+      opsiSurat: state?.opsiSurat ?? "",
       nik: userData.nik || "",
       nama: userData.nama || "",
       hp: userData.hp || "",
