@@ -63,7 +63,11 @@ export const AdminHeader = ({ opened, handleOpen }) => {
       <div className="flex items-center justify-between gap-8 p-6 sm:py-6">
         {/* LOGO */}
         <Link to="/">
-          <img src={LogoCilodong} alt="orcalogo" className="h-[6vh] w-auto" />
+          <img
+            src={LogoCilodong}
+            alt="LogoCilodong"
+            className="h-[6vh] w-auto"
+          />
         </Link>
         <MediaQuery largerThan="sm" styles={{ display: "none" }}>
           <Burger

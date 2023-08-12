@@ -357,7 +357,7 @@ const ModalUpdateStatus = ({ show, close, data }) => {
       idPengaju: data.userID,
       kodeSurat: data.id,
       namaPengaju: data.nama,
-      namaSurat: `[${data.nama}-${data.nik}]-${data.jenisSurat}`,
+      namaSurat: `[${data.nama}-${data.nik}]-${data.namaOpsiSurat}`,
       tanggalTerbit: serverTimestamp(),
     })
       .then((res) => {

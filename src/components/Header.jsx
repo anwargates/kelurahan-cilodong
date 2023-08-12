@@ -118,7 +118,7 @@ export const Header = () => {
         <div className="default-container flex h-[10vh] items-center justify-between gap-8 p-6 px-2 md:py-6 lg:px-16">
           {/* LOGO */}
           <Link to="/">
-            <img src={LogoCilodong} alt="orcalogo" className="h-[6vh]" />
+            <img src={LogoCilodong} alt="LogoCilodong" className="h-[6vh]" />
           </Link>
 
           <div className="flex items-center gap-10">
